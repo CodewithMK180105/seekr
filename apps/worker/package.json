@@ -1,0 +1,24 @@
+{
+  "name": "@seekr/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/worker.ts",
+    "build": "tsc",
+    "start": "node dist/worker.js"
+  },
+  "dependencies": {
+    "@seekr/types": "workspace:*",
+    "@seekr/shared": "workspace:*",
+    "axios": "^1.7.7",
+    "bullmq": "^5.25.6",
+    "cheerio": "^1.0.0",
+    "dotenv": "^16.4.5",
+    "robots-parser": "^3.0.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

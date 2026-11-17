@@ -1,0 +1,167 @@
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+enum SourceType {
+  WEBSITE
+  DOCUMENTATION
+  WIKIPEDIA_API
+  GITHUB_API
+}
+
+enum SourceStatus {
+  ACTIVE
+  PAUSED
+  DISABLED
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum SearchMode {
+  KEYWORD
+  SEMANTIC
+  HYBRID
+}
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  apiKeys       ApiKey[]
+  crawlJobs     CrawlJob[]
+  searchQueries SearchQuery[]
+
+  @@map("users")
+}
+
+model ApiKey {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  keyHash   String    @unique @map("key_hash")
+  expiresAt DateTime? @map("expires_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("api_keys")
+}
+
+model Source {
+  id         String       @id @default(uuid()) @db.Uuid
+  name       String
+  baseUrl    String       @map("base_url")
+  sourceType SourceType   @map("source_type")
+  status     SourceStatus @default(ACTIVE)
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+
+  crawlJobs CrawlJob[]
+  documents Document[]
+
+  @@map("sources")
+}
+
+model CrawlJob {
+  id             String    @id @default(uuid()) @db.Uuid
+  sourceId       String    @map("source_id") @db.Uuid
+  createdBy      String    @map("created_by") @db.Uuid
+  status         JobStatus @default(PENDING)
+  pagesProcessed Int       @default(0) @map("pages_processed")
+  pagesFailed    Int       @default(0) @map("pages_failed")
+  retryCount     Int       @default(0) @map("retry_count")
+  errorMessage   String?   @map("error_message")
+  startedAt      DateTime? @map("started_at")
+  completedAt    DateTime? @map("completed_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([sourceId])
+  @@index([status])
+  @@map("crawl_jobs")
+}
+
+model Document {
+  id          String   @id @default(uuid()) @db.Uuid
+  sourceId    String   @map("source_id") @db.Uuid
+  url         String   @unique
+  title       String
+  content     String   @db.Text
+  contentHash String   @map("content_hash")
+  language    String   @default("en")
+  crawledAt   DateTime @default(now()) @map("crawled_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  source Source          @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  chunks DocumentChunk[]
+
+  @@index([sourceId])
+  @@index([contentHash])
+  @@map("documents")
+}
+
+model DocumentChunk {
+  id           String                      @id @default(uuid()) @db.Uuid
+  documentId   String                      @map("document_id") @db.Uuid
+  chunkIndex   Int                         @map("chunk_index")
+  content      String                      @db.Text
+  embedding    Unsupported("vector(768)")?
+  searchVector Unsupported("tsvector")?    @map("search_vector")
+  tokenCount   Int                         @map("token_count")
+  createdAt    DateTime                    @default(now()) @map("created_at")
+
+  document      Document       @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  searchResults SearchResult[]
+
+  @@unique([documentId, chunkIndex])
+  @@index([documentId])
+  @@map("document_chunks")
+}
+
+model SearchQuery {
+  id          String     @id @default(uuid()) @db.Uuid
+  userId      String?    @map("user_id") @db.Uuid
+  query       String     @db.Text
+  searchMode  SearchMode @map("search_mode")
+  resultCount Int        @map("result_count")
+  latencyMs   Int        @map("latency_ms")
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  user    User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  results SearchResult[]
+
+  @@index([userId])
+  @@map("search_queries")
+}
+
+model SearchResult {
+  id            String @id @default(uuid()) @db.Uuid
+  searchQueryId String @map("search_query_id") @db.Uuid
+  chunkId       String @map("chunk_id") @db.Uuid
+  resultRank    Int    @map("result_rank")
+  fusedScore    Float  @map("fused_score")
+
+  searchQuery SearchQuery   @relation(fields: [searchQueryId], references: [id], onDelete: Cascade)
+  chunk       DocumentChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+
+  @@index([searchQueryId])
+  @@index([chunkId])
+  @@map("search_results")
+}
