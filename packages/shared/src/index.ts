@@ -6,3 +6,5 @@ export * from './redis.js';
 export * from './db.js';
 export * from './queue.js';
 export * from './ssrfGuard.js';
+export * from './chunker.js';
+export * from './embeddings/index.js';

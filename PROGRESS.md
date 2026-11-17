@@ -5,9 +5,9 @@ Tracking implementation status across development milestones.
 ---
 
 ## Overall Status
-- **Current Phase**: Phase 2 Completed ✅
-- **Next Phase**: Phase 3 — Content Processing & Search Indexing (Chunking, Vector Embeddings, tsvector)
-- **Automated Tests**: 43 / 43 Passing across 9 test suites (Unit & API Integration)
+- **Current Phase**: Phase 3 Completed ✅
+- **Next Phase**: Phase 4 — Hybrid Search Engine & Evaluation (BM25/ts_rank_cd, Cosine Vector Search, Reciprocal Rank Fusion RRF, Benchmark Dataset)
+- **Automated Tests**: 55 / 55 Passing across 12 test suites (Unit & API Integration)
 
 ---
 
@@ -60,13 +60,27 @@ Tracking implementation status across development milestones.
 
 ---
 
-### Phase 3: Content Processing & Search Indexing
-- [ ] BullMQ `seekr-indexer` processor (triggered upon new or updated document).
-- [ ] Sliding-window chunking (256–512 tokens with 20 token overlap).
-- [ ] Embedding generation integration (Gemini / OpenAI provider strategy with rate-limit backoff).
-- [ ] Vector storage in PostgreSQL `document_chunks` table.
-- [ ] PostgreSQL Full-Text Search indexing (`tsvector` generation and GIN index).
-- [ ] Atomic re-indexing transaction (delete stale chunks upon document update and insert fresh chunks).
+### Phase 3: Content Processing & Search Indexing ✅
+- [x] Sliding-window chunking (`packages/shared/src/chunker.ts`): sentence-boundary aware, 300–500 tokens with 40-token overlap.
+- [x] Embedding Provider Strategy (`packages/shared/src/embeddings/`):
+  - [x] `EmbeddingProvider` interface with batch embedding support.
+  - [x] `GeminiEmbeddingProvider`: Google `text-embedding-004` (768-dim) with sub-batching (max 50) and exponential backoff retry.
+  - [x] `OpenAIEmbeddingProvider`: OpenAI `text-embedding-3-small` (1536-dim).
+  - [x] `MockEmbeddingProvider`: Deterministic L2-normalized 768-dim vector fallback for offline and local testing.
+  - [x] `getEmbeddingProvider()` factory selecting provider via `.env` configuration.
+- [x] BullMQ `seekr-indexer` worker (`apps/worker/src/processors/indexProcessor.ts`):
+  - [x] Fetches document from PostgreSQL.
+  - [x] Generates sliding-window chunks with title grounding.
+  - [x] Batch generates dense vector embeddings.
+  - [x] Atomic transaction: cleans stale chunks when `isUpdate = true`, and inserts chunks into `document_chunks`.
+  - [x] Dual representation: `embedding vector(768)` (HNSW cosine index) and `search_vector tsvector` (GIN index with weighted title 'A' and content 'B').
+- [x] Background Worker orchestration (`apps/worker/src/worker.ts`): concurrent crawl and index workers with graceful shutdown.
+- [x] Live database verification: all 13 crawled documents indexed into 31 searchable chunks in PostgreSQL.
+- [x] Automated test suites:
+  - `packages/shared/src/__tests__/chunker.test.ts` (5 tests)
+  - `packages/shared/src/__tests__/embeddings.test.ts` (5 tests)
+  - `apps/worker/src/__tests__/indexer.test.ts` (2 tests)
+- [x] Recorded ADR 011 in `TECHNICAL_DECISIONS.md`.
 
 ---
 

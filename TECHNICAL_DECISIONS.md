@@ -98,3 +98,20 @@ This document records the architectural and technical decisions made during the 
 - **Status**: Accepted
 - **Context**: Deferring frontend development to the final phase creates high risk of integration mismatch and poor visibility during backend development.
 - **Decision**: Scaffold the Next.js frontend (`apps/web`) in Phase 2 alongside ingestion APIs, providing a live dashboard for sources and crawl jobs.
+
+---
+
+## ADR 011: Sentence-Boundary Sliding-Window Chunking & Dual Representation
+- **Status**: Accepted
+- **Context**: Raw document text must be partitioned into searchable units for both dense vector retrieval and sparse full-text lexical ranking. Naive character or token slicing cuts sentences and technical words in half, destroying semantic coherence and corrupting keyword queries.
+- **Decision**:
+  1. **Sliding-Window Sentence Chunker**: Token-aware chunking ($300\text{--}500$ tokens, 40-token overlap) that strictly preserves sentence boundaries (`packages/shared/src/chunker.ts`).
+  2. **Contextual Title Grounding**: Chunk embeddings are generated from `${doc.title}\n\n${chunk.content}`, preventing isolated paragraphs from losing their document subject matter.
+  3. **Dual Representation**:
+     - **Semantic Vector**: 768-dimensional dense vector (`vector(768)`) with HNSW cosine index.
+     - **Lexical `tsvector`**: PostgreSQL `tsvector` with weighted fields — document title has weight `'A'` and chunk content has weight `'B'` (`setweight(...)`).
+  4. **Atomic Upsert Transactions**: On update (`isUpdate = true`), existing chunks are deleted and new chunks are inserted within an explicit `prisma.$transaction`, with `ON CONFLICT ("document_id", "chunk_index")` upsert logic preventing duplicate chunks.
+- **Consequences**:
+  - Eliminates semantic context fragmentation across chunk boundaries.
+  - Title weighting substantially boosts BM25 / `ts_rank_cd` search precision in Phase 4.
+  - Guarantees database consistency even if worker instances crash mid-job.
