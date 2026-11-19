@@ -48,10 +48,31 @@ export const createCrawlJobSchema = z.object({
 export type CreateCrawlJobInput = z.infer<typeof createCrawlJobSchema>;
 
 export const searchQuerySchema = z.object({
-  q: z.string().min(1, 'Query cannot be empty').max(500, 'Query too long').trim(),
-  mode: z.enum(['KEYWORD', 'SEMANTIC', 'HYBRID']).default('HYBRID'),
-  page: z.coerce.number().int().positive().default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(10),
+  q: z.string().trim().min(1, 'Query cannot be empty').max(500, 'Query too long'),
+  mode: z
+    .preprocess(
+      (val) => (typeof val === 'string' ? val.toUpperCase() : val),
+      z.enum(['KEYWORD', 'SEMANTIC', 'HYBRID'])
+    )
+    .default('HYBRID'),
+  page: z.coerce.number().int().positive('Page must be a positive integer').default(1),
+  limit: z.coerce.number().int().min(1).max(100, 'Limit cannot exceed 100').default(10),
+  sourceId: z.string().uuid('Invalid source ID format').optional(),
 });
 
 export type SearchQueryInput = z.infer<typeof searchQuerySchema>;
+
+export const suggestionsQuerySchema = z.object({
+  q: z.string().trim().min(1, 'Prefix query cannot be empty').max(100),
+  limit: z.coerce.number().int().min(1).max(20).default(8),
+});
+
+export type SuggestionsQueryInput = z.infer<typeof suggestionsQuerySchema>;
+
+export const searchFeedbackSchema = z.object({
+  searchId: z.string().uuid('Invalid search ID format'),
+  chunkId: z.string().uuid('Invalid chunk ID format'),
+  action: z.literal('click'),
+});
+
+export type SearchFeedbackInput = z.infer<typeof searchFeedbackSchema>;

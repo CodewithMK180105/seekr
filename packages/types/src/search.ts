@@ -3,22 +3,94 @@ export type SearchMode = 'KEYWORD' | 'SEMANTIC' | 'HYBRID';
 export interface SearchResultItem {
   chunkId: string;
   documentId: string;
+  chunkIndex: number;
   title: string;
   url: string;
   content: string;
   score: number;
   rank: number;
   sourceType: string;
+  keywordRank?: number | null;
+  vectorRank?: number | null;
+  matchedBy?: {
+    keyword: boolean;
+    vector: boolean;
+  };
+}
+
+export interface SearchPagination {
+  page: number;
+  limit: number;
+  offset: number;
+  total: number;
+  hasMore: boolean;
 }
 
 export interface SearchResponse {
+  searchId?: string;
   query: string;
   mode: SearchMode;
-  totalResults: number;
-  latencyMs: number;
   results: SearchResultItem[];
-  page: number;
-  limit: number;
+  pagination: SearchPagination;
+  latencyMs: number;
+  degraded?: boolean;
+  degradedReason?: string;
+}
+
+export interface SuggestionsResponse {
+  query: string;
+  suggestions: string[];
+}
+
+export interface SearchFeedbackPayload {
+  searchId: string;
+  chunkId: string;
+  action: 'click';
+}
+
+export interface SearchAnalyticsResponse {
+  totalQueries: number;
+  modeDistribution: Record<SearchMode, number>;
+  avgLatencyMs: number;
+  clickThroughRate: number;
+  zeroResultQueries: Array<{ query: string; count: number }>;
+  topQueries: Array<{ query: string; count: number }>;
+  topClickedDocuments: Array<{ title: string; url: string; clicks: number }>;
+}
+
+export interface RankedSearchResult {
+  chunkId: string;
+  documentId: string;
+  chunkIndex: number;
+  content: string;
+  title: string;
+  url: string;
+  sourceType: string;
+  rank: number;
+  score: number;
+  source: 'keyword' | 'vector';
+}
+
+export interface FusedSearchResult {
+  chunkId: string;
+  documentId: string;
+  chunkIndex: number;
+  content: string;
+  title: string;
+  url: string;
+  sourceType: string;
+  fusedScore: number;
+  keywordRank: number | null;
+  vectorRank: number | null;
+  matchedBy: {
+    keyword: boolean;
+    vector: boolean;
+  };
+}
+
+export interface Retriever {
+  readonly name: string;
+  search(query: string, limit: number, sourceId?: string): Promise<RankedSearchResult[]>;
 }
 
 export interface Citation {

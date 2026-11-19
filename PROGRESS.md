@@ -5,9 +5,9 @@ Tracking implementation status across development milestones.
 ---
 
 ## Overall Status
-- **Current Phase**: Phase 3 Completed ✅
-- **Next Phase**: Phase 4 — Hybrid Search Engine & Evaluation (BM25/ts_rank_cd, Cosine Vector Search, Reciprocal Rank Fusion RRF, Benchmark Dataset)
-- **Automated Tests**: 55 / 55 Passing across 12 test suites (Unit & API Integration)
+- **Current Phase**: Phase 4 — Hybrid Search Engine & Evaluation (Milestone 4.1 Completed)
+- **Next Milestone**: Milestone 4.2 — Keyword Retrieval (PostgreSQL ts_rank_cd, websearch_to_tsquery, GIN)
+- **Automated Tests**: 75 / 75 Passing across 14 test suites (Unit, Integration & API)
 
 ---
 
@@ -85,14 +85,19 @@ Tracking implementation status across development milestones.
 ---
 
 ### Phase 4: Hybrid Search Engine & Evaluation
-- [ ] Keyword search retrieval via `ts_rank_cd`.
-- [ ] Semantic vector search retrieval via pgvector cosine similarity.
-- [ ] Reciprocal Rank Fusion (RRF with $k=60$) implementation.
-- [ ] Result deduplication and pagination.
-- [ ] Autocomplete search suggestions.
-- [ ] **Search Quality Evaluation Benchmark Dataset**:
-  - Curated 30–50 annotated test queries with ground-truth relevance.
-  - Objective benchmark measuring Precision@5/10, Recall@5/10, MRR, nDCG@10, and p50/p95 latency comparing Keyword vs Vector vs Hybrid RRF.
+- [x] **Milestone 4.1: Search Foundation & Types**:
+  - [x] Search domain types (`Retriever`, `RankedSearchResult`, `FusedSearchResult`, `SearchResponse`, `SearchPagination`).
+  - [x] Zod validation schemas (`searchQuerySchema`, `suggestionsQuerySchema`, `searchFeedbackSchema`).
+  - [x] Database migration: Added `clicked` and `clicked_at` to `search_results` table for click tracking and CTR analytics.
+  - [x] Search module skeleton (`search.routes.ts`, `search.controller.ts`, mounted at `/api/v1/search`).
+  - [x] Automated unit and API integration tests (20 new tests: 13 schema tests, 7 API foundation tests).
+- [ ] Milestone 4.2: Keyword search retrieval via `ts_rank_cd` and `websearch_to_tsquery`.
+- [ ] Milestone 4.3: Semantic vector search retrieval via `pgvector` cosine distance.
+- [ ] Milestone 4.4: Reciprocal Rank Fusion (RRF with $k=60$) implementation and fallback handling.
+- [ ] Milestone 4.5: Search pagination and candidate windowing.
+- [ ] Milestone 4.6: Autocomplete search suggestions.
+- [ ] Milestone 4.7: Search analytics and click tracking (`/api/v1/analytics/search`, `/api/v1/search/feedback`).
+- [ ] Milestone 4.8: Search Quality Evaluation Benchmark Dataset (30–50 queries, Precision@10, Recall@10, MRR, nDCG@10, latency p50/p95).
 
 ---
 

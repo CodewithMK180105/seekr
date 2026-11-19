@@ -152,16 +152,19 @@ model SearchQuery {
 }
 
 model SearchResult {
-  id            String @id @default(uuid()) @db.Uuid
-  searchQueryId String @map("search_query_id") @db.Uuid
-  chunkId       String @map("chunk_id") @db.Uuid
-  resultRank    Int    @map("result_rank")
-  fusedScore    Float  @map("fused_score")
+  id            String    @id @default(uuid()) @db.Uuid
+  searchQueryId String    @map("search_query_id") @db.Uuid
+  chunkId       String    @map("chunk_id") @db.Uuid
+  resultRank    Int       @map("result_rank")
+  fusedScore    Float     @map("fused_score")
+  clicked       Boolean   @default(false)
+  clickedAt     DateTime? @map("clicked_at")
 
   searchQuery SearchQuery   @relation(fields: [searchQueryId], references: [id], onDelete: Cascade)
   chunk       DocumentChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
 
   @@index([searchQueryId])
   @@index([chunkId])
+  @@index([clicked])
   @@map("search_results")
 }
