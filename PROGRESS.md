@@ -5,9 +5,9 @@ Tracking implementation status across development milestones.
 ---
 
 ## Overall Status
-- **Current Phase**: Phase 4 — Hybrid Search Engine & Evaluation (Milestone 4.1 Completed)
-- **Next Milestone**: Milestone 4.2 — Keyword Retrieval (PostgreSQL ts_rank_cd, websearch_to_tsquery, GIN)
-- **Automated Tests**: 75 / 75 Passing across 14 test suites (Unit, Integration & API)
+- **Current Phase**: Phase 4 — Hybrid Search Engine & Evaluation (Milestones 4.1, 4.2, 4.3 & 4.4 Completed)
+- **Next Milestone**: Milestone 4.5 — Search Autocomplete, Suggestions & Search History/Analytics
+- **Automated Tests**: 126 / 126 Passing across 18 test suites (Unit, Integration & API)
 
 ---
 
@@ -88,16 +88,33 @@ Tracking implementation status across development milestones.
 - [x] **Milestone 4.1: Search Foundation & Types**:
   - [x] Search domain types (`Retriever`, `RankedSearchResult`, `FusedSearchResult`, `SearchResponse`, `SearchPagination`).
   - [x] Zod validation schemas (`searchQuerySchema`, `suggestionsQuerySchema`, `searchFeedbackSchema`).
-  - [x] Database migration: Added `clicked` and `clicked_at` to `search_results` table for click tracking and CTR analytics.
+  - [x] Database migration: Added `clicked` and `clicked_at` with index to `search_results` table for click tracking and CTR analytics.
   - [x] Search module skeleton (`search.routes.ts`, `search.controller.ts`, mounted at `/api/v1/search`).
-  - [x] Automated unit and API integration tests (20 new tests: 13 schema tests, 7 API foundation tests).
-- [ ] Milestone 4.2: Keyword search retrieval via `ts_rank_cd` and `websearch_to_tsquery`.
-- [ ] Milestone 4.3: Semantic vector search retrieval via `pgvector` cosine distance.
-- [ ] Milestone 4.4: Reciprocal Rank Fusion (RRF with $k=60$) implementation and fallback handling.
-- [ ] Milestone 4.5: Search pagination and candidate windowing.
-- [ ] Milestone 4.6: Autocomplete search suggestions.
-- [ ] Milestone 4.7: Search analytics and click tracking (`/api/v1/analytics/search`, `/api/v1/search/feedback`).
-- [ ] Milestone 4.8: Search Quality Evaluation Benchmark Dataset (30–50 queries, Precision@10, Recall@10, MRR, nDCG@10, latency p50/p95).
+  - [x] Automated unit and API integration tests (20 tests: 13 schema tests, 7 API foundation tests).
+- [x] **Milestone 4.2: Keyword Retrieval Service**:
+  - [x] `KeywordRetrieverService` using PostgreSQL Full-Text Search cover density ranking (`ts_rank_cd`).
+  - [x] `websearch_to_tsquery('english', $1)` with safe `plainto_tsquery` fallback.
+  - [x] 100% Parameterized SQL via Prisma tagged templates (`$queryRaw`) preventing SQL injection.
+  - [x] Verified GIN index (`document_chunks_search_vector_gin_idx`) via `EXPLAIN (ANALYZE, BUFFERS)`.
+  - [x] Safe handling of stop-words, punctuation, special symbols, and unclosed quotes.
+  - [x] 14 automated unit & integration tests (`keyword-retriever.test.ts`).
+- [x] **Milestone 4.3: Semantic (Vector) Retrieval Service**:
+  - [x] `VectorRetrieverService` using pgvector cosine distance (`<=>`) converted to similarity score `1 - distance`.
+  - [x] 768-dimensional dense vector embeddings generated via `getEmbeddingProvider()`.
+  - [x] Verified HNSW index (`document_chunks_embedding_hnsw_idx`) via `EXPLAIN (ANALYZE, BUFFERS)`.
+  - [x] Graceful degradation on embedding provider failure.
+  - [x] 12 automated unit & integration tests (`vector-retriever.test.ts`).
+- [x] **Milestone 4.4: Hybrid Ranking (RRF) & Search Orchestration**:
+  - [x] `RrfRankingService` implementing Reciprocal Rank Fusion ($k=60$): $RRF(d) = \sum \frac{1}{60 + rank(d)}$.
+  - [x] Deduplication by `chunkId`, score accumulation, tracking `matchedBy`, `keywordRank`, and `vectorRank`.
+  - [x] Deterministic tie-breaking on identical scores (`chunkId ASC`) and input immutability.
+  - [x] `SearchService` orchestrating `KEYWORD`, `SEMANTIC`, and `HYBRID` modes.
+  - [x] Concurrent retriever dispatch via `Promise.allSettled` with automatic single-retriever fallback.
+  - [x] Post-ranking pagination (`page`, `limit`, `offset`, `total`, `hasMore`).
+  - [x] SearchController integrated with live search pipeline (`GET /api/v1/search`).
+  - [x] Automated test suites: `rrf-ranking.test.ts` (13 tests), `search.service.test.ts` (11 tests), `search-foundation.test.ts` (8 tests).
+- [ ] Milestone 4.5: Search Autocomplete, Suggestions & Search History/Analytics.
+- [ ] Milestone 4.6: Search Quality Evaluation Benchmark Dataset (30–50 queries, Precision@10, Recall@10, MRR, nDCG@10, latency p50/p95).
 
 ---
 

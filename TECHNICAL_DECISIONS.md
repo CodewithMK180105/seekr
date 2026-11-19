@@ -115,3 +115,29 @@ This document records the architectural and technical decisions made during the 
   - Eliminates semantic context fragmentation across chunk boundaries.
   - Title weighting substantially boosts BM25 / `ts_rank_cd` search precision in Phase 4.
   - Guarantees database consistency even if worker instances crash mid-job.
+
+---
+
+## ADR 012: Reciprocal Rank Fusion (RRF) for Hybrid Search Fusion
+- **Status**: Accepted
+- **Context**: In hybrid search, lexical retrieval (`ts_rank_cd`) and vector retrieval (cosine similarity) return scores that are fundamentally incompatible in distribution and scale. Linear weighted combinations (e.g. $\alpha \cdot \text{lexical} + \beta \cdot \text{vector}$) suffer from score drift across queries, require dataset-dependent tuning of hyperparameters, and are vulnerable to outliers.
+- **Decision**: Adopt Reciprocal Rank Fusion (RRF) with constant $k = 60$:
+  $$RRF(d) = \sum_{m \in \mathcal{M}} \frac{1}{60 + rank_m(d)}$$
+  - RRF operates exclusively on ordinal rank positions rather than raw uncalibrated scores.
+  - Documents appearing in both result lists receive accumulated reciprocal ranks, naturally elevating consensus matches.
+  - Results are deduplicated by `chunkId`, ties in RRF score are broken deterministically by `chunkId ASC`, and retriever provenance (`matchedBy: { keyword, vector }`, `keywordRank`, `vectorRank`) is preserved.
+- **Consequences**:
+  - Robust, scale-invariant fusion without manual calibration across varying query types.
+  - Transparent debugging and evaluation through preserved retriever provenance.
+
+---
+
+## ADR 013: Post-Fusion Pagination & Graceful Degradation Strategy
+- **Status**: Accepted
+- **Context**: Paginating lexical and vector results independently before fusion causes rank truncation and unstable pagination. Furthermore, vector retrieval relies on external embedding providers (e.g. Gemini API), which may encounter network blips, rate limits, or quota exhaustion.
+- **Decision**:
+  1. **Post-Fusion Pagination**: Retrievers fetch a candidate depth ($K = \min(100, \max(\text{page} \times \text{limit} + 20, 50))$) to ensure adequate ranking depth before applying RRF and deduplication. Slicing for pagination (`offset = (page - 1) * limit`) occurs strictly after ranking.
+  2. **Graceful Degradation**: In `HYBRID` mode, retrievers execute concurrently via `Promise.allSettled`. If vector retrieval fails, keyword results are returned seamlessly with `degraded: true, degradedReason: 'Vector retriever failed'`. If keyword retrieval fails, vector results are returned with `degraded: true`. User search never hard-crashes on single-provider failure.
+- **Consequences**:
+  - Stable pagination guarantees consistent result ordering across pages.
+  - Production resilience against third-party AI provider outages.
