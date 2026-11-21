@@ -45,6 +45,7 @@ model User {
   apiKeys       ApiKey[]
   crawlJobs     CrawlJob[]
   searchQueries SearchQuery[]
+  researchSessions ResearchSession[]
 
   @@map("users")
 }
@@ -176,4 +177,23 @@ model SearchResult {
   @@index([chunkId])
   @@index([clicked])
   @@map("search_results")
+}
+
+model ResearchSession {
+  id         String     @id @default(uuid()) @db.Uuid
+  userId     String?    @map("user_id") @db.Uuid
+  query      String     @db.Text
+  answer     String     @db.Text
+  searchMode SearchMode @map("search_mode")
+  citations  Json
+  sources    Json
+  latencyMs  Int        @map("latency_ms")
+  createdAt  DateTime   @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([searchMode])
+  @@map("research_sessions")
 }

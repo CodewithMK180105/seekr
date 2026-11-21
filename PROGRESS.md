@@ -5,9 +5,9 @@ Tracking implementation status across development milestones.
 ---
 
 ## Overall Status
-- **Current Phase**: Phase 4 — Hybrid Search Engine & Evaluation (Milestones 4.1, 4.2, 4.3, 4.4, 4.5 & 4.6 Completed) ✅
-- **Next Phase**: Phase 5 — RAG Research Engine
-- **Automated Tests**: 164 / 164 Passing across 24 test suites (Unit, Integration & API)
+- **Current Phase**: Phase 5 — RAG Research Engine (Milestones 5.1, 5.2, 5.3 & 5.4 Completed)
+- **Next Milestone**: Phase 6 — Optimization & Observability (Caching, Rate Limiting & Performance)
+- **Automated Tests**: 220 / 220 Passing across 31 test suites (Unit, Integration & API)
 
 ---
 
@@ -136,10 +136,49 @@ Tracking implementation status across development milestones.
 ---
 
 ### Phase 5: RAG Research Engine
-- [ ] Context retrieval and assembly (Reverse Packing).
-- [ ] LLM integration for synthesis (Gemini Flash / OpenAI).
-- [ ] Verifiable citation mapping to source chunks.
-- [ ] Untrusted prompt injection safeguards.
+- [x] **Milestone 5.1: LLM Provider Abstraction & Strategy** (`packages/shared/src/llm/`):
+  - [x] Vendor-agnostic `LlmProvider` interface with structured request/response types (`LlmGenerateRequest`, `LlmGenerateResponse`, `LlmUsageMetadata`).
+  - [x] Provider Factory & Registry (`getLlmProvider`, `registerLlmProvider`, `resetLlmProvider`).
+  - [x] `GeminiLlmProvider`: Native fetch integration with Google Gemini API (`gemini-2.5-flash`), exponential backoff on 429/503, timeouts, and usage tracking.
+  - [x] `OpenAILlmProvider`: OpenAI Chat Completions API integration (`gpt-4o-mini`).
+  - [x] `MockLlmProvider`: Deterministic fallback fixture for offline testing and development.
+  - [x] Unit test suite (`packages/shared/src/llm/__tests__/llm.test.ts`, 11 tests passing).
+- [x] **Milestone 5.2: Context Assembler & Prompt Injection Defense** (`apps/api/src/modules/research/`):
+  - [x] `ContextAssembler`: Relevance-ranked packing prioritizing top search results within strict token budgets.
+  - [x] Conservative token budgeting (~3.8 chars/token) reserving headroom for system prompts, query, response, and framing overhead.
+  - [x] Deterministic chunk truncation with truncation markers preserving XML boundaries.
+  - [x] Multi-layered prompt injection defense:
+    - Structural separation via out-of-band `systemInstruction`.
+    - Syntactic boundary isolation escaping `</source>` tags to `&lt;/source&gt;`.
+    - Inert data framing (`[BEGIN SEARCH RETRIEVAL CONTEXT - UNTRUSTED DATA ONLY]`).
+    - Precautionary regex scanning for jailbreaks, overrides, and persona hijacks with security warning tags.
+  - [x] Insufficient context handling returning clean disclaimers when results are empty, low-confidence, or over-budget.
+  - [x] `ResearchService` prototype wiring SearchService, ContextAssembler, LlmProvider, and citation mapping (`[1]`, `[2]`).
+  - [x] Unit test suites: `context-assembler.test.ts` (8 tests), `injection-defense.test.ts` (10 tests), `research.service.test.ts` (4 tests). Total new tests: 33.
+- [x] **Milestone 5.3 & 5.4: Research REST APIs, Streaming Synthesis & Verifiable Citations** (`apps/api/src/modules/research/`):
+  - [x] `POST /api/v1/research`: Synchronous RAG endpoint with Zod validation (`query`, `mode`, `maxSources`, `temperature`), hybrid context assembly, grounded LLM synthesis, verified citation extraction, and database persistence returning `ApiResponse<ResearchResponse>`.
+  - [x] `POST /api/v1/research/stream`: Server-Sent Events (SSE) streaming endpoint emitting real-time event sequences (`sources` -> `token` -> `citations` -> `complete` or `error`), zero fake token buffering, and client disconnect handling (`res.on('close')`) with `AbortController` cancellation.
+  - [x] `GET /api/v1/research/:id`: UUID session retrieval returning persisted query, answer, mode, citations, sources snapshot, and timing metadata (400 on malformed UUID, 404 on nonexistent).
+  - [x] `GET /api/v1/research/:id/sources`: Detailed source cards endpoint returning source ID, title, URL, chunk ID, relevance rank/score, and all citing claim references.
+  - [x] `CitationPostProcessor` (`citation-post-processor.ts`):
+    - [x] Regex citation extraction (`[n]`) and mapping against assembled sources.
+    - [x] Sentence segmentation attributing specific claims to cited sources.
+    - [x] Exact excerpt extraction via word-token overlap locating best supporting sentences from source chunks.
+    - [x] Citation validation flagging out-of-bounds citations (`isValid: false`) and identifying uncited sources.
+    - [x] Deduplication by `citationIndex` aggregating claims across sentences.
+  - [x] Research persistence layer (`research_sessions` table & `research.repository.ts`):
+    - [x] Database migration creating `research_sessions` table with foreign key to `users` and indexes on `user_id`, `created_at`, `search_mode`, and `normalized_query`.
+    - [x] Prisma repository handling session creation and UUID queries with atomic JSONB serialization.
+  - [x] Streaming LLM Provider extensions:
+    - [x] `generateStream` interface on `LlmProvider` emitting `LlmStreamChunk` chunks.
+    - [x] Implemented in `MockLlmProvider`, `GeminiLlmProvider` (`streamGenerateContent`), and `OpenAILlmProvider` (`chat.completions.create({ stream: true })`).
+  - [x] Automated test suites:
+    - [x] `citation-post-processor.test.ts` (6 tests)
+    - [x] `research.repository.test.ts` (3 tests)
+    - [x] `research.api.test.ts` (13 tests)
+    - [x] `llm.test.ts` (12 tests including streaming)
+    - [x] Total Research module tests: 44 passing across 6 suites. Total project tests: 220 passing across 31 suites.
+  - [x] Recorded ADR 018 in `TECHNICAL_DECISIONS.md`.
 
 ---
 

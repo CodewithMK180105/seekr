@@ -181,3 +181,69 @@ This document records the architectural and technical decisions made during the 
   - Provides empirical baselines: `SEMANTIC` and `HYBRID` achieve $>0.82$ nDCG@10 and $>0.94$ Recall@10, while `KEYWORD` provides sub-5ms latency ($3.17\text{ms}$ P50) and dominates on exact token matches ($0.7987$ nDCG@10 on `EXACT_KEYWORD`), but fails on conceptual/natural queries.
   - Zero divergence between production search and evaluation search.
   - Fully isolated from user query logs and analytics tables.
+
+---
+
+## ADR 016: Vendor-Agnostic LLM Provider Strategy & Factory
+- **Status**: Accepted
+- **Context**: RAG research synthesis requires executing generation requests against frontier LLMs. Directly coupling application modules to a specific vendor SDK (e.g. Google Generative AI or OpenAI) introduces vendor lock-in, bloats dependencies, complicates offline/mock testing, and prevents seamless failover.
+- **Decision**:
+  1. **Normalized Provider Contract (`packages/shared/src/llm/types.ts`)**: Define a uniform `LlmProvider` interface with normalized request schemas (`LlmGenerateRequest`), response payloads (`LlmGenerateResponse`), token usage metadata (`LlmUsageMetadata`), and finish reasons (`stop`, `length`, `content_filter`, etc.).
+  2. **Native Lightweight REST Clients**: Implement `GeminiLlmProvider` and `OpenAILlmProvider` using native `fetch` with `AbortController` timeout controls and exponential backoff retry on HTTP 429 and 503 errors, avoiding heavy external SDK dependencies.
+  3. **Deterministic Mock Provider (`MockLlmProvider`)**: Provide an offline mock implementation capable of configurable synthetic replies, error injection, latency simulation, and token estimation.
+  4. **Dynamic Factory & Extensible Registry (`factory.ts`)**: Provider selection resolved at runtime via environment variables (`LLM_PROVIDER`, `GEMINI_API_KEY`, `OPENAI_API_KEY`) with fallback to `MockLlmProvider` and support for custom provider registration via `registerLlmProvider`.
+- **Consequences**:
+  - Research modules are completely decoupled from external LLM vendors.
+  - Zero heavyweight vendor SDK dependencies in the codebase.
+  - Fast, deterministic offline testing without external API calls or billing costs.
+
+---
+
+## ADR 017: Multi-Layered Prompt Injection Defense, Token Budgeting & Grounded Context Assembly
+- **Status**: Accepted
+- **Context**: In RAG systems, retrieved web documents are untrusted user/web data that may contain malicious prompt injections, jailbreaks, or instruction overrides. Furthermore, LLM context windows are bounded, and naive context concatenation risks context overflow errors, truncated outputs, and ungrounded hallucinations.
+- **Decision**:
+  1. **Multi-Layered Injection Defense in Depth (`injection-guard.ts`)**:
+     - *Structural Separation (Primary)*: Trusted system instructions are passed via out-of-band `systemInstruction` parameters, isolating instructions from untrusted data prompts.
+     - *Syntactic Boundary Isolation*: Chunks are encapsulated in `<source id="[n]" ...>` XML tags. Any internal closing tags (e.g. `</source>`) are escaped to `&lt;/source&gt;`.
+     - *Inert Data Framing*: Retrieved documents are strictly wrapped in `[BEGIN SEARCH RETRIEVAL CONTEXT - UNTRUSTED DATA ONLY]` and `[END SEARCH RETRIEVAL CONTEXT]` boundaries instructing the model to treat content purely as inert factual data.
+     - *Heuristic Precautionary Scanning*: Scans for instruction overrides, jailbreaks, persona hijacks, and fake system tags. Flagged chunks receive an in-context security notice rather than being discarded, ensuring articles legitimately discussing security can still be analyzed.
+  2. **Conservative Token Budgeting & Boundary Truncation (`token-counter.ts`, `context-assembler.ts`)**:
+     - Uses a documented conservative estimator: $\lceil \text{length} / 3.8 \rceil$ tokens.
+     - Upfront reservations deduct system prompt tokens, user query tokens, response budget (default 1024), safety margin (default 100), and framing overhead from total context capacity.
+     - Oversized chunks are truncated deterministically with truncation markers while strictly preserving closing XML tags.
+  3. **Groundedness & Insufficient-Context Safeguards (`context-assembler.ts`, `research.service.ts`)**:
+     - Every assembled source maintains full citation traceability (`citationId: [1]`, `chunkId`, `title`, `url`, `rank`, `score`).
+     - When retrieval yields 0 results or top scores fall below `minRelevanceScore`, the system immediately returns an explicit insufficient-evidence disclaimer without executing the LLM, eliminating hallucination risks.
+- **Consequences**:
+  - Robust multi-layered protection against prompt injection and boundary breakout attacks.
+  - Provable adherence to token budgets with zero context-window overflow errors.
+  - Verifiable citation mapping from generated text back to crawled PostgreSQL chunks.
+
+---
+
+## ADR 018: Research REST APIs, Server-Sent Events (SSE) Streaming & Verifiable Citation Post-Processing
+- **Status**: Accepted
+- **Context**: Grounded RAG synthesis in Seekr requires exposing both synchronous and real-time streaming endpoints for interactive consumption, persisting research sessions for historical auditability and source inspection, and guaranteeing citation veracity. Raw LLM responses may hallucinate nonexistent citation indices (e.g. `[99]`), misattribute statements, or omit supporting evidence. Furthermore, real-time client consumption demands standard SSE streaming with graceful client disconnect handling and zero fake token buffering.
+- **Decision**:
+  1. **Dual Research Endpoints (`research.controller.ts`, `research.routes.ts`)**:
+     - `POST /api/v1/research`: Synchronous RAG synthesis validating input via Zod (`query`, `mode`, `maxSources`, `temperature`), executing hybrid search retrieval, assembling injected-defended context, generating LLM synthesis, running citation post-processing, persisting to `research_sessions`, and returning structured `ApiResponse<ResearchResponse>`.
+     - `POST /api/v1/research/stream`: Server-Sent Events (SSE) endpoint setting standard SSE headers (`Content-Type: text/event-stream`, `Cache-Control: no-cache`, `Connection: keep-alive`), emitting sequential events: `sources` -> incremental `token` -> `citations` -> `complete` (or `error`).
+     - Session persistence is performed upon stream completion, ensuring that stream consumers obtain an immutable persisted session ID.
+  2. **Express & Node.js HTTP Streaming Abort Safety**:
+     - Monitored response termination using `res.on('close', ...)` rather than `req.on('close')`, as `req.on('close')` fires prematurely upon request body consumption in standard Node.js HTTP servers.
+     - Linked an `AbortController` signal to `res.on('close')` when `!res.writableEnded`, cleanly canceling pending LLM stream loops and DB transactions on client disconnect without leaking memory.
+  3. **Verifiable Citation Post-Processing (`citation-post-processor.ts`)**:
+     - Extracts inline citations (`[n]`) and maps them to assembled source chunks.
+     - Sentence segmentation isolates claiming sentences and links them to cited sources.
+     - Exact excerpt extraction: computes word-token overlap between claim sentences and source chunk text, locating and extracting the highest-scoring supporting sentence excerpt from the source chunk.
+     - Citation validity verification: flags invalid citations where index $n$ exceeds available sources (`isValid: false`, `reason: 'Out of bounds'`), verifies supporting overlap threshold, and identifies unused sources (`cited: false`).
+     - Aggregate citations deduplicated by `citationIndex` while preserving all associated claim sentences.
+  4. **Relational Persistence Layer (`research_sessions` table, `research.repository.ts`)**:
+     - Created `ResearchSession` Prisma model with UUID primary key, `query`, `normalized_query`, `answer`, `search_mode`, `token_budget`, `metadata` (JSONB), `sources` (JSONB snapshot), `citations` (JSONB snapshot), optional `user_id` foreign key, and monotonic `latency_ms`.
+     - PostgreSQL indexes added on `user_id`, `created_at`, `search_mode`, and `normalized_query` for fast lookups.
+     - Exposed session retrieval endpoints: `GET /api/v1/research/:id` and `GET /api/v1/research/:id/sources` with strict 400 validation on non-UUID format and 404 on nonexistent sessions.
+- **Consequences**:
+  - Provides deterministic, verifiable citations connecting LLM claims to crawled PostgreSQL chunks.
+  - Enables low-latency interactive streaming UX via SSE with robust client-abort cleanup.
+  - Complete historical persistence of research queries, answers, verified citations, and source snapshots.
