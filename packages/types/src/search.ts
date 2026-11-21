@@ -28,6 +28,7 @@ export interface SearchPagination {
 
 export interface SearchResponse {
   searchId?: string;
+  searchQueryId?: string;
   query: string;
   mode: SearchMode;
   results: SearchResultItem[];
@@ -43,19 +44,41 @@ export interface SuggestionsResponse {
 }
 
 export interface SearchFeedbackPayload {
-  searchId: string;
+  searchId?: string;
+  searchQueryId?: string;
   chunkId: string;
-  action: 'click';
+  action?: 'click';
+  event?: 'click';
 }
 
 export interface SearchAnalyticsResponse {
+  period?: {
+    from: string | null;
+    to: string | null;
+  };
   totalQueries: number;
-  modeDistribution: Record<SearchMode, number>;
   avgLatencyMs: number;
+  averageLatencyMs?: number;
+  p50LatencyMs: number;
+  p95LatencyMs: number;
   clickThroughRate: number;
-  zeroResultQueries: Array<{ query: string; count: number }>;
+  searchCtr: number;
+  resultCtr: number;
+  modeDistribution: Record<SearchMode, number>;
+  searchModeDistribution: Array<{
+    mode: SearchMode;
+    count: number;
+    percentage: number;
+  }>;
   topQueries: Array<{ query: string; count: number }>;
-  topClickedDocuments: Array<{ title: string; url: string; clicks: number }>;
+  topClickedDocuments: Array<{
+    documentId?: string;
+    chunkId?: string;
+    title: string;
+    url: string;
+    clicks: number;
+  }>;
+  zeroResultQueries: Array<{ query: string; count: number }>;
 }
 
 export interface RankedSearchResult {

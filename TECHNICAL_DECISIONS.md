@@ -141,3 +141,43 @@ This document records the architectural and technical decisions made during the 
 - **Consequences**:
   - Stable pagination guarantees consistent result ordering across pages.
   - Production resilience against third-party AI provider outages.
+
+---
+
+## ADR 014: Search Observability, Asynchronous Non-Blocking Query Logging, Click Feedback & Database-Level Analytics
+- **Status**: Accepted
+- **Context**: Understanding search usage, retrieval latency, click behavior, and search quality requires real-time query logging and telemetry. However, logging database writes must not add latency to user search responses, click tracking must ensure provenance integrity (preventing clicks on unretrieved chunks), and analytics queries over millions of events must not load raw rows into Node.js application memory.
+- **Decision**:
+  1. **Non-Blocking Query Logging (`SearchLoggingService`)**: `search_queries` and top result impressions (`search_results`) are persisted asynchronously via a fire-and-forget promise that is not awaited in the main search response path. Any logging errors are caught and logged as warnings, guaranteeing that logging issues never degrade user search requests.
+  2. **Fast Autocomplete without LLMs (`SearchSuggestionsService`)**: Suggestions query document titles (`documents.title ILIKE prefix%`) and historical searches (`search_queries.normalized_query LIKE prefix%`) using PostgreSQL B-tree indexes. Bounded at 10 results, deduplicated case-insensitively, with minimum 2 characters prefix, avoiding the latency and financial cost of LLMs or embedding generation.
+  3. **Idempotent Click Provenance Verification (`SearchFeedbackService`)**: On `POST /api/v1/search/feedback`, the service verifies that `searchQueryId` exists and that `chunkId` was part of the logged result set for that search. Clicks update `clicked = true` and `clicked_at = COALESCE(clicked_at, NOW())`, ensuring subsequent clicks do not overwrite the initial timestamp.
+  4. **Database-Level Analytics Aggregation (`SearchAnalyticsService`)**: Analytics calculations execute entirely inside PostgreSQL using SQL aggregations:
+     - Latency percentiles: `PERCENTILE_CONT(0.50)` and `PERCENTILE_CONT(0.95)` within group.
+     - Search CTR: `(searches with >= 1 clicked result / total searches) * 100`.
+     - Result CTR: `(total clicks / total impressions) * 100`.
+     - Zero-result queries and search mode distributions.
+     - Zero application memory overhead regardless of search event volume.
+- **Consequences**:
+  - Zero search latency overhead from query and click logging.
+  - Robust protection against fraudulent or invalid click feedback payloads.
+  - Real-time visibility into retrieval performance, zero-result gaps, and user interaction metrics.
+
+---
+
+## ADR 015: Search Quality Evaluation & Benchmark Suite
+- **Status**: Accepted
+- **Context**: A search engine combining lexical (BM25 / `ts_rank_cd`), semantic (dense vector cosine similarity via pgvector), and hybrid (RRF) retrieval strategies needs empirical, objective evaluation. Without an automated benchmark suite, regression detection across algorithm changes, embedding provider migrations, and index parameter tuning is impossible. The evaluation system must measure ranking quality (Precision@K, Recall@K, MRR, nDCG@K) against verified corpus ground truth, record monotonic latencies (P50, P95) without caching bias, avoid contaminating behavioral analytics data, and operate directly through production retrieval services without code duplication.
+- **Decision**:
+  1. **Corpus-Grounded Benchmark Dataset (`benchmark-v1.json`)**: 40 evaluation queries stratified across 6 distinct linguistic and semantic query categories (`EXACT_KEYWORD`, `CONCEPTUAL`, `NATURAL_LANGUAGE`, `AMBIGUOUS`, `EXACT_PHRASE`, `LONG_TAIL`). Ground-truth relevance is curated directly against actual indexed PostgreSQL chunks using graded relevance scales ($0 = \text{irrelevant}, 1 = \text{weakly relevant}, 2 = \text{relevant}, 3 = \text{highly relevant}$).
+  2. **Standard Information Retrieval (IR) Metrics Suite (`metrics.ts`)**: Pure, independently tested mathematical functions:
+     - **Precision@10**: Proportion of top-10 retrieved chunks that are relevant ($relevance \ge 1$).
+     - **Recall@10**: Proportion of all ground-truth relevant chunks ($relevance \ge 1$) retrieved in top 10.
+     - **MRR (Mean Reciprocal Rank)**: $\frac{1}{rank_{first}}$ where $rank_{first}$ is the position of the first relevant chunk ($relevance \ge 2$), or 0 if none found.
+     - **nDCG@10 (Normalized Discounted Cumulative Gain)**: $DCG@10 = \sum_{i=1}^{10} \frac{2^{rel_i} - 1}{\log_2(i + 1)}$ normalized by ideal $IDCG@10$.
+  3. **Production Pipeline Execution (`SearchService` integration)**: The benchmark runner invokes the exact production `SearchService.search()` implementation sequentially across `KEYWORD`, `SEMANTIC`, and `HYBRID` modes. To prevent benchmark execution from skewing production user analytics and search suggestions, a `disableLogging: true` flag was introduced to bypass `SearchLoggingService`.
+  4. **Monotonic High-Resolution Latency Measurement (`performance.now()`)**: Queries execute sequentially with a dedicated warm-up run per mode, followed by timed execution using Node.js `performance.now()`. Computes P50, P95, mean, min, and max latencies.
+  5. **Automated Dual-Format Reporting (`reporter.ts`) & CLI (`cli.ts`)**: Results are exported to timestamped JSON (for automated ingestion/CI) and formatted Markdown (for human review) in `evaluation/reports/`, with executive summary tables, per-category breakdowns, query-level performance tables, and comparative insights.
+- **Consequences**:
+  - Provides empirical baselines: `SEMANTIC` and `HYBRID` achieve $>0.82$ nDCG@10 and $>0.94$ Recall@10, while `KEYWORD` provides sub-5ms latency ($3.17\text{ms}$ P50) and dominates on exact token matches ($0.7987$ nDCG@10 on `EXACT_KEYWORD`), but fails on conceptual/natural queries.
+  - Zero divergence between production search and evaluation search.
+  - Fully isolated from user query logs and analytics tables.

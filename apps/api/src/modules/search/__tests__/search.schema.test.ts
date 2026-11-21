@@ -64,10 +64,10 @@ describe('Search Validation Schemas', () => {
   });
 
   describe('suggestionsQuerySchema', () => {
-    it('should validate prefix query and apply default limit 8', () => {
+    it('should validate prefix query and apply default limit 5', () => {
       const parsed = suggestionsQuerySchema.parse({ q: 'red' });
       expect(parsed.q).toBe('red');
-      expect(parsed.limit).toBe(8);
+      expect(parsed.limit).toBe(5);
     });
 
     it('should reject empty prefix query', () => {
@@ -75,8 +75,8 @@ describe('Search Validation Schemas', () => {
       expect(() => suggestionsQuerySchema.parse({ q: '   ' })).toThrow();
     });
 
-    it('should reject limit exceeding 20', () => {
-      expect(() => suggestionsQuerySchema.parse({ q: 'red', limit: 25 })).toThrow();
+    it('should reject limit exceeding 10', () => {
+      expect(() => suggestionsQuerySchema.parse({ q: 'red', limit: 15 })).toThrow();
     });
   });
 

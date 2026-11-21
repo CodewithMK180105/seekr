@@ -5,9 +5,9 @@ Tracking implementation status across development milestones.
 ---
 
 ## Overall Status
-- **Current Phase**: Phase 4 — Hybrid Search Engine & Evaluation (Milestones 4.1, 4.2, 4.3 & 4.4 Completed)
-- **Next Milestone**: Milestone 4.5 — Search Autocomplete, Suggestions & Search History/Analytics
-- **Automated Tests**: 126 / 126 Passing across 18 test suites (Unit, Integration & API)
+- **Current Phase**: Phase 4 — Hybrid Search Engine & Evaluation (Milestones 4.1, 4.2, 4.3, 4.4, 4.5 & 4.6 Completed) ✅
+- **Next Phase**: Phase 5 — RAG Research Engine
+- **Automated Tests**: 164 / 164 Passing across 24 test suites (Unit, Integration & API)
 
 ---
 
@@ -113,8 +113,25 @@ Tracking implementation status across development milestones.
   - [x] Post-ranking pagination (`page`, `limit`, `offset`, `total`, `hasMore`).
   - [x] SearchController integrated with live search pipeline (`GET /api/v1/search`).
   - [x] Automated test suites: `rrf-ranking.test.ts` (13 tests), `search.service.test.ts` (11 tests), `search-foundation.test.ts` (8 tests).
-- [ ] Milestone 4.5: Search Autocomplete, Suggestions & Search History/Analytics.
-- [ ] Milestone 4.6: Search Quality Evaluation Benchmark Dataset (30–50 queries, Precision@10, Recall@10, MRR, nDCG@10, latency p50/p95).
+- [x] **Milestone 4.5: Search Autocomplete, Suggestions & Search History/Analytics**:
+  - [x] `SearchSuggestionsService` (`GET /api/v1/search/suggestions`): Low-latency prefix autocomplete combining indexed document titles and historical searches, case-insensitive deduplication, minimum query length (2 chars), clamped limits (default 5, max 10), zero LLM overhead.
+  - [x] `SearchLoggingService`: Asynchronous, fire-and-forget query logging persisting `search_queries` (with indexed `normalized_query`) and top result impressions to `search_results` without blocking search latency.
+  - [x] `SearchFeedbackService` (`POST /api/v1/search/feedback`): Click tracking verifying query existence and result inclusion, setting `clicked = true` and `clicked_at = COALESCE(clicked_at, NOW())` with idempotent repeated-click preservation.
+  - [x] `SearchAnalyticsService` (`GET /api/v1/search/analytics`): Database-level aggregations computing total queries, average latency, P50/P95 latency percentiles (`PERCENTILE_CONT`), Search CTR, Result CTR, search mode distribution (counts + %), top queries, top clicked documents, and zero-result queries with optional ISO date windowing.
+  - [x] Search controller and routes wired with route precedence (`/analytics` before `/:id`).
+  - [x] Automated test suites: `search-suggestions.test.ts` (5 tests), `search-logging.test.ts` (4 tests), `search-feedback.test.ts` (4 tests), `search-analytics.test.ts` (3 tests), `search-foundation.test.ts` (10 tests). Total tests: 144 passed across 22 suites.
+- [x] **Milestone 4.6: Search Quality Evaluation & Benchmark Suite**:
+  - [x] Benchmark Dataset (`evaluation/datasets/benchmark-v1.json`): 40 curated evaluation queries stratified across 6 query categories (`EXACT_KEYWORD`, `CONCEPTUAL`, `NATURAL_LANGUAGE`, `AMBIGUOUS`, `EXACT_PHRASE`, `LONG_TAIL`), with 29 unique ground-truth chunk IDs and graded relevance scores ($0\text{--}3$) curated and verified against the actual PostgreSQL corpus.
+  - [x] IR Evaluation Metrics (`apps/api/src/modules/search/evaluation/metrics.ts`): Independent, pure mathematical implementations of Precision@10, Recall@10, Mean Reciprocal Rank (MRR), Discounted Cumulative Gain (DCG@10), and Normalized Discounted Cumulative Gain (nDCG@10).
+  - [x] Benchmark Runner (`apps/api/src/modules/search/evaluation/benchmark-runner.ts`): Orchestrates sequential evaluation across all 3 search modes (`KEYWORD`, `SEMANTIC`, `HYBRID`) using the production `SearchService`, warm-up runs, monotonic timing (`performance.now()`), and computes P50, P95, mean, min, and max latencies.
+  - [x] Production Search Service Integration: Added `disableLogging?: boolean` flag in `SearchParams` to bypass analytics logging during automated evaluation, preventing distortion of user search metrics.
+  - [x] Dual-Format Reporting & CLI: Generates timestamped JSON and comprehensive Markdown reports in `evaluation/reports/` with executive summaries, category breakdowns, query-level performance tables, and comparative insights. Added CLI command `pnpm evaluation:run`.
+  - [x] Benchmark Results (40 queries):
+    - `KEYWORD`: P@10 = 0.0750, R@10 = 0.3896, MRR = 0.4258, nDCG@10 = 0.3778, P50 = 3.17ms, P95 = 11.08ms.
+    - `SEMANTIC`: P@10 = 0.1900, R@10 = 0.9583, MRR = 0.8438, nDCG@10 = 0.8408, P50 = 459.45ms, P95 = 508.93ms.
+    - `HYBRID`: P@10 = 0.1875, R@10 = 0.9458, MRR = 0.8111, nDCG@10 = 0.8209, P50 = 466.10ms, P95 = 601.01ms.
+  - [x] Automated test suites: `metrics.test.ts` (17 tests), `runner.test.ts` (3 tests). Total tests: 164 passed across 24 suites.
+  - [x] Recorded ADR 015 in `TECHNICAL_DECISIONS.md`.
 
 ---
 

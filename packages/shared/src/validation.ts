@@ -64,15 +64,29 @@ export type SearchQueryInput = z.infer<typeof searchQuerySchema>;
 
 export const suggestionsQuerySchema = z.object({
   q: z.string().trim().min(1, 'Prefix query cannot be empty').max(100),
-  limit: z.coerce.number().int().min(1).max(20).default(8),
+  limit: z.coerce.number().int().min(1).max(10).default(5),
 });
 
 export type SuggestionsQueryInput = z.infer<typeof suggestionsQuerySchema>;
 
-export const searchFeedbackSchema = z.object({
-  searchId: z.string().uuid('Invalid search ID format'),
-  chunkId: z.string().uuid('Invalid chunk ID format'),
-  action: z.literal('click'),
-});
+export const searchFeedbackSchema = z
+  .object({
+    searchId: z.string().uuid('Invalid search ID format').optional(),
+    searchQueryId: z.string().uuid('Invalid search query ID format').optional(),
+    chunkId: z.string().uuid('Invalid chunk ID format'),
+    action: z.literal('click').optional(),
+    event: z.literal('click').optional(),
+  })
+  .refine((data) => Boolean(data.searchId || data.searchQueryId), {
+    message: 'Either searchId or searchQueryId is required',
+    path: ['searchQueryId'],
+  });
 
 export type SearchFeedbackInput = z.infer<typeof searchFeedbackSchema>;
+
+export const searchAnalyticsQuerySchema = z.object({
+  from: z.string().datetime().optional(),
+  to: z.string().datetime().optional(),
+});
+
+export type SearchAnalyticsQueryInput = z.infer<typeof searchAnalyticsQuerySchema>;

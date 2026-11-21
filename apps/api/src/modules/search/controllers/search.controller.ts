@@ -3,16 +3,26 @@ import {
   searchQuerySchema,
   suggestionsQuerySchema,
   searchFeedbackSchema,
+  searchAnalyticsQuerySchema,
 } from '../search.schema.js';
 import {
   ApiResponse,
   SearchResponse,
   SuggestionsResponse,
+  SearchAnalyticsResponse,
   SearchMode,
 } from '../search.types.js';
-import { SearchService } from '../services/search.service.js';
+import {
+  SearchService,
+  SearchSuggestionsService,
+  SearchFeedbackService,
+  SearchAnalyticsService,
+} from '../services/index.js';
 
 const searchService = new SearchService();
+const suggestionsService = new SearchSuggestionsService();
+const feedbackService = new SearchFeedbackService();
+const analyticsService = new SearchAnalyticsService();
 
 export async function search(
   req: Request,
@@ -21,6 +31,8 @@ export async function search(
 ): Promise<void> {
   try {
     const input = searchQuerySchema.parse(req.query);
+    const userId = (req as any).user?.id;
+    const sessionId = (req.headers['x-session-id'] as string) || undefined;
 
     const searchResponse = await searchService.search({
       query: input.q,
@@ -28,6 +40,8 @@ export async function search(
       page: input.page,
       limit: input.limit,
       sourceId: input.sourceId,
+      userId,
+      sessionId,
     });
 
     const response: ApiResponse<SearchResponse> = {
@@ -53,16 +67,39 @@ export async function getSuggestions(
 ): Promise<void> {
   try {
     const input = suggestionsQuerySchema.parse(req.query);
+    const suggestions = await suggestionsService.getSuggestions(input.q, input.limit);
 
-    // Skeleton response for Milestone 4.1 Foundation
     const suggestionsResponse: SuggestionsResponse = {
       query: input.q,
-      suggestions: [],
+      suggestions,
     };
 
     const response: ApiResponse<SuggestionsResponse> = {
       success: true,
       data: suggestionsResponse,
+    };
+
+    res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getAnalytics(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const filter = searchAnalyticsQuerySchema.parse(req.query);
+    const from = filter.from ? new Date(filter.from) : undefined;
+    const to = filter.to ? new Date(filter.to) : undefined;
+
+    const analytics = await analyticsService.getAnalytics({ from, to });
+
+    const response: ApiResponse<SearchAnalyticsResponse> = {
+      success: true,
+      data: analytics,
     };
 
     res.status(200).json(response);
@@ -97,14 +134,22 @@ export async function recordFeedback(
 ): Promise<void> {
   try {
     const input = searchFeedbackSchema.parse(req.body);
+    const result = await feedbackService.recordClick({
+      searchQueryId: input.searchQueryId,
+      searchId: input.searchId,
+      chunkId: input.chunkId,
+      action: input.action,
+      event: input.event,
+    });
 
-    const response: ApiResponse<{ recorded: boolean; searchId: string; chunkId: string }> = {
+    const response: ApiResponse<{
+      recorded: boolean;
+      searchId: string;
+      searchQueryId: string;
+      chunkId: string;
+    }> = {
       success: true,
-      data: {
-        recorded: true,
-        searchId: input.searchId,
-        chunkId: input.chunkId,
-      },
+      data: result,
     };
 
     res.status(200).json(response);

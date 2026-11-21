@@ -20,6 +20,8 @@ describe('Search Foundation Endpoints', () => {
       expect(res.body.success).toBe(true);
       expect(res.body.data.query).toBe('redis persistence');
       expect(res.body.data.mode).toBe('HYBRID');
+      expect(res.body.data.searchId).toBeDefined();
+      expect(res.body.data.searchQueryId).toBeDefined();
       expect(Array.isArray(res.body.data.results)).toBe(true);
       expect(res.body.data.pagination).toMatchObject({
         page: 1,
@@ -68,13 +70,10 @@ describe('Search Foundation Endpoints', () => {
   });
 
   describe('POST /api/v1/search/feedback', () => {
-    const validSearchId = '123e4567-e89b-12d3-a456-426614174000';
-    const validChunkId = '987fcdeb-51a2-43f7-9876-ba0987654321';
-
     it('returns 422 for malformed feedback payload', async () => {
       const res = await request(app).post('/api/v1/search/feedback').send({
         searchId: 'not-a-uuid',
-        chunkId: validChunkId,
+        chunkId: 'not-a-uuid',
         action: 'click',
       });
 
@@ -82,18 +81,67 @@ describe('Search Foundation Endpoints', () => {
       expect(res.body.success).toBe(false);
     });
 
-    it('returns 200 acknowledging valid click feedback payload', async () => {
+    it('returns 404 when search query does not exist', async () => {
+      const nonExistentSearchId = '00000000-0000-0000-0000-000000000000';
+      const dummyChunkId = '11111111-1111-1111-1111-111111111111';
+
       const res = await request(app).post('/api/v1/search/feedback').send({
-        searchId: validSearchId,
-        chunkId: validChunkId,
+        searchId: nonExistentSearchId,
+        chunkId: dummyChunkId,
         action: 'click',
       });
 
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+    });
+
+    it('returns 200 acknowledging valid click feedback payload for logged results', async () => {
+      // 1. Perform search to generate query and logged results
+      const searchRes = await request(app).get('/api/v1/search?q=redis&mode=KEYWORD');
+      expect(searchRes.status).toBe(200);
+
+      const searchId = searchRes.body.data.searchQueryId || searchRes.body.data.searchId;
+      expect(searchId).toBeDefined();
+
+      if (searchRes.body.data.results.length > 0) {
+        const chunkId = searchRes.body.data.results[0].chunkId;
+
+        // Brief delay to allow async logging to complete in DB
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        const feedbackRes = await request(app).post('/api/v1/search/feedback').send({
+          searchId,
+          chunkId,
+          action: 'click',
+        });
+
+        expect(feedbackRes.status).toBe(200);
+        expect(feedbackRes.body.success).toBe(true);
+        expect(feedbackRes.body.data.recorded).toBe(true);
+        expect(feedbackRes.body.data.searchId).toBe(searchId);
+        expect(feedbackRes.body.data.chunkId).toBe(chunkId);
+      }
+    });
+  });
+
+  describe('GET /api/v1/search/analytics', () => {
+    it('returns 200 with search analytics metrics and distributions', async () => {
+      const res = await request(app).get('/api/v1/search/analytics');
+
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.recorded).toBe(true);
-      expect(res.body.data.searchId).toBe(validSearchId);
-      expect(res.body.data.chunkId).toBe(validChunkId);
+      expect(res.body.data).toBeDefined();
+      expect(typeof res.body.data.totalQueries).toBe('number');
+      expect(typeof res.body.data.avgLatencyMs).toBe('number');
+      expect(typeof res.body.data.p50LatencyMs).toBe('number');
+      expect(typeof res.body.data.p95LatencyMs).toBe('number');
+      expect(typeof res.body.data.searchCtr).toBe('number');
+      expect(typeof res.body.data.resultCtr).toBe('number');
+      expect(res.body.data.modeDistribution).toBeDefined();
+      expect(Array.isArray(res.body.data.searchModeDistribution)).toBe(true);
+      expect(Array.isArray(res.body.data.topQueries)).toBe(true);
+      expect(Array.isArray(res.body.data.topClickedDocuments)).toBe(true);
+      expect(Array.isArray(res.body.data.zeroResultQueries)).toBe(true);
     });
   });
 });

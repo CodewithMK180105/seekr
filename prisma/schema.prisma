@@ -136,18 +136,25 @@ model DocumentChunk {
 }
 
 model SearchQuery {
-  id          String     @id @default(uuid()) @db.Uuid
-  userId      String?    @map("user_id") @db.Uuid
-  query       String     @db.Text
-  searchMode  SearchMode @map("search_mode")
-  resultCount Int        @map("result_count")
-  latencyMs   Int        @map("latency_ms")
-  createdAt   DateTime   @default(now()) @map("created_at")
+  id              String         @id @default(uuid()) @db.Uuid
+  userId          String?        @map("user_id") @db.Uuid
+  sessionId       String?        @map("session_id")
+  query           String         @db.Text
+  normalizedQuery String         @default("") @map("normalized_query")
+  searchMode      SearchMode     @map("search_mode")
+  resultCount     Int            @map("result_count")
+  latencyMs       Int            @map("latency_ms")
+  page            Int            @default(1)
+  limit           Int            @default(10)
+  createdAt       DateTime       @default(now()) @map("created_at")
 
   user    User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
   results SearchResult[]
 
   @@index([userId])
+  @@index([normalizedQuery])
+  @@index([createdAt])
+  @@index([searchMode])
   @@map("search_queries")
 }
 
@@ -163,6 +170,8 @@ model SearchResult {
   searchQuery SearchQuery   @relation(fields: [searchQueryId], references: [id], onDelete: Cascade)
   chunk       DocumentChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
 
+  @@unique([searchQueryId, chunkId])
+  @@unique([searchQueryId, resultRank])
   @@index([searchQueryId])
   @@index([chunkId])
   @@index([clicked])

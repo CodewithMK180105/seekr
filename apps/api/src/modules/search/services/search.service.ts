@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
   SearchMode,
   SearchResponse,
@@ -8,6 +9,7 @@ import {
 import { KeywordRetrieverService } from './keyword-retriever.service.js';
 import { VectorRetrieverService } from './vector-retriever.service.js';
 import { RrfRankingService } from './rrf-ranking.service.js';
+import { SearchLoggingService } from './search-logging.service.js';
 
 export interface SearchParams {
   query: string;
@@ -15,6 +17,9 @@ export interface SearchParams {
   page?: number;
   limit?: number;
   sourceId?: string;
+  userId?: string;
+  sessionId?: string;
+  disableLogging?: boolean;
 }
 
 /**
@@ -29,20 +34,24 @@ export interface SearchParams {
  * - Post-ranking, post-deduplication pagination.
  * - Metadata formatting (matchedBy, keywordRank, vectorRank).
  * - Graceful degradation if a retriever fails in HYBRID mode.
+ * - Asynchronous, non-blocking query logging and click preparation.
  */
 export class SearchService {
   private readonly keywordRetriever: Retriever;
   private readonly vectorRetriever: Retriever;
   private readonly rrfService: RrfRankingService;
+  private readonly searchLoggingService: SearchLoggingService;
 
   constructor(
     keywordRetriever: Retriever = new KeywordRetrieverService(),
     vectorRetriever: Retriever = new VectorRetrieverService(),
-    rrfService: RrfRankingService = new RrfRankingService()
+    rrfService: RrfRankingService = new RrfRankingService(),
+    searchLoggingService: SearchLoggingService = new SearchLoggingService()
   ) {
     this.keywordRetriever = keywordRetriever;
     this.vectorRetriever = vectorRetriever;
     this.rrfService = rrfService;
+    this.searchLoggingService = searchLoggingService;
   }
 
   /**
@@ -50,6 +59,7 @@ export class SearchService {
    */
   async search(params: SearchParams): Promise<SearchResponse> {
     const startTime = Date.now();
+    const searchQueryId = randomUUID();
 
     // 1. Normalize query and pagination parameters
     const cleanQuery = typeof params.query === 'string' ? params.query.trim() : '';
@@ -61,6 +71,8 @@ export class SearchService {
     // Fast-path: return empty response for empty queries
     if (cleanQuery.length === 0) {
       return {
+        searchId: searchQueryId,
+        searchQueryId,
         query: cleanQuery,
         mode,
         results: [],
@@ -193,8 +205,11 @@ export class SearchService {
     const total = allRankedResults.length;
     const pagedResults = allRankedResults.slice(offset, offset + limit);
     const hasMore = offset + pagedResults.length < total;
+    const latencyMs = Date.now() - startTime;
 
-    return {
+    const response: SearchResponse = {
+      searchId: searchQueryId,
+      searchQueryId,
       query: cleanQuery,
       mode,
       results: pagedResults,
@@ -205,8 +220,30 @@ export class SearchService {
         total,
         hasMore,
       },
-      latencyMs: Date.now() - startTime,
+      latencyMs,
       ...(degraded ? { degraded: true, degradedReason } : {}),
     };
+
+    // Non-blocking asynchronous query & results logging (skipped if disableLogging is true)
+    if (!params.disableLogging) {
+      this.searchLoggingService
+        .logSearch({
+          searchQueryId,
+          userId: params.userId,
+          sessionId: params.sessionId,
+          query: cleanQuery,
+          searchMode: mode,
+          resultCount: total,
+          latencyMs,
+          page,
+          limit,
+          results: pagedResults,
+        })
+        .catch((err) => {
+          console.warn('[SearchService] Async logging dispatch error:', err);
+        });
+    }
+
+    return response;
   }
 }

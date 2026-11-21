@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   search,
   getSuggestions,
+  getAnalytics,
   getSearchById,
   recordFeedback,
 } from '../controllers/search.controller.js';
@@ -13,6 +14,9 @@ router.get('/', search);
 
 // GET /api/v1/search/suggestions - Autocomplete prefix suggestions
 router.get('/suggestions', getSuggestions);
+
+// GET /api/v1/search/analytics - Search metrics, latency and click tracking analytics
+router.get('/analytics', getAnalytics);
 
 // GET /api/v1/search/:id - Specific search result details
 router.get('/:id', getSearchById);

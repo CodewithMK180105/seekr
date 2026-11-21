@@ -1,0 +1,671 @@
+{
+  "version": "1.0.0",
+  "description": "Seekr Search Quality Benchmark Dataset v1 (40 curated queries across 6 categories)",
+  "createdAt": "2026-11-21T04:54:21.404Z",
+  "queries": [
+    {
+      "id": "Q001",
+      "query": "Linux kernel source tree",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+          "relevance": 3
+        },
+        {
+          "chunkId": "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q002",
+      "query": "al-Khwarizmi",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+          "relevance": 3
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 2
+        },
+        {
+          "chunkId": "01a6fb7f-c897-4eef-bcc8-d17672889429",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q003",
+      "query": "Turing machine programs",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "a5d940be-1e53-4d36-8f07-740d13485096",
+          "relevance": 3
+        },
+        {
+          "chunkId": "0aadad74-10bd-41a5-903d-64b93d79fe18",
+          "relevance": 2
+        },
+        {
+          "chunkId": "e5ac9713-5ddb-4eac-b953-ff1488711510",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q004",
+      "query": "Redis Intent Router",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+          "relevance": 3
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q005",
+      "query": "Euclid division algorithm",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "a089af33-4d90-44b4-86d9-35fedfdb844f",
+          "relevance": 3
+        },
+        {
+          "chunkId": "01a6fb7f-c897-4eef-bcc8-d17672889429",
+          "relevance": 2
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q006",
+      "query": "Agent Playbooks",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+          "relevance": 3
+        },
+        {
+          "chunkId": "68b91d4c-c779-4eea-8638-c488b7c6e701",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 2
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q007",
+      "query": "GitHub Enterprise Importer migrations",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+          "relevance": 3
+        },
+        {
+          "chunkId": "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q008",
+      "query": "Jacquard loom punch cards",
+      "category": "EXACT_KEYWORD",
+      "relevantChunks": [
+        {
+          "chunkId": "e5ac9713-5ddb-4eac-b953-ff1488711510",
+          "relevance": 3
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q009",
+      "query": "how to reduce LLM inference costs and eliminate redundant prompt lookups",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 2
+        },
+        {
+          "chunkId": "68b91d4c-c779-4eea-8638-c488b7c6e701",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q010",
+      "query": "difference between heuristic approaches and guaranteed algorithms",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "94d26395-1e23-40d1-8c1e-f3089614c396",
+          "relevance": 3
+        },
+        {
+          "chunkId": "01a6fb7f-c897-4eef-bcc8-d17672889429",
+          "relevance": 2
+        },
+        {
+          "chunkId": "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q011",
+      "query": "persisting state and long-term memory in autonomous AI agents",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        },
+        {
+          "chunkId": "465eb1de-319d-467c-84e6-512aacc5fad5",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q012",
+      "query": "operating system kernel guidelines and code of conduct",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+          "relevance": 3
+        },
+        {
+          "chunkId": "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+          "relevance": 2
+        },
+        {
+          "chunkId": "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q013",
+      "query": "evaluating time and memory requirements as algorithm input increases",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "e89ecb94-2ffc-461a-9482-2d58a36e0a0c",
+          "relevance": 3
+        },
+        {
+          "chunkId": "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q014",
+      "query": "safeguarding private personal email addresses when pushing git commits",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+          "relevance": 3
+        },
+        {
+          "chunkId": "0cd66fd4-7598-425b-a599-f4c19dc692cb",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q015",
+      "query": "theoretical formalization of effective computability and mechanical calculation",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "0aadad74-10bd-41a5-903d-64b93d79fe18",
+          "relevance": 3
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 2
+        },
+        {
+          "chunkId": "a5d940be-1e53-4d36-8f07-740d13485096",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q016",
+      "query": "accessing business data from LLM agents with standardized schemas",
+      "category": "CONCEPTUAL",
+      "relevantChunks": [
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 2
+        },
+        {
+          "chunkId": "1be2beb3-64d9-4f62-91dd-89775d155623",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q017",
+      "query": "Where does the word algorithm come from historically?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+          "relevance": 3
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 2
+        },
+        {
+          "chunkId": "01a6fb7f-c897-4eef-bcc8-d17672889429",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q018",
+      "query": "What documentation covers system administration for Linux kernels?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+          "relevance": 3
+        },
+        {
+          "chunkId": "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+          "relevance": 2
+        },
+        {
+          "chunkId": "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q019",
+      "query": "What are the main capabilities of Redis Iris for AI developers?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "b1246d80-099c-4076-b411-e5eab0654ec4",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        },
+        {
+          "chunkId": "22634f18-b20a-4078-9897-17eca06cf5e6",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q020",
+      "query": "How did telephone switching machines and looms lead to modern computers?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "e5ac9713-5ddb-4eac-b953-ff1488711510",
+          "relevance": 3
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q021",
+      "query": "Why do AI agents need persistent context across conversations?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 2
+        },
+        {
+          "chunkId": "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q022",
+      "query": "How do live repository migrations minimize downtime for engineering teams?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+          "relevance": 3
+        },
+        {
+          "chunkId": "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q023",
+      "query": "What formal models proved equivalent in algorithmic theory?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "0aadad74-10bd-41a5-903d-64b93d79fe18",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a5d940be-1e53-4d36-8f07-740d13485096",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q024",
+      "query": "How does matching questions by meaning speed up responses?",
+      "category": "NATURAL_LANGUAGE",
+      "relevantChunks": [
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 2
+        },
+        {
+          "chunkId": "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q025",
+      "query": "memory",
+      "category": "AMBIGUOUS",
+      "relevantChunks": [
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        },
+        {
+          "chunkId": "e89ecb94-2ffc-461a-9482-2d58a36e0a0c",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q026",
+      "query": "routing",
+      "category": "AMBIGUOUS",
+      "relevantChunks": [
+        {
+          "chunkId": "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+          "relevance": 3
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        },
+        {
+          "chunkId": "465eb1de-319d-467c-84e6-512aacc5fad5",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q027",
+      "query": "migration",
+      "category": "AMBIGUOUS",
+      "relevantChunks": [
+        {
+          "chunkId": "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+          "relevance": 3
+        },
+        {
+          "chunkId": "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "Q028",
+      "query": "rules",
+      "category": "AMBIGUOUS",
+      "relevantChunks": [
+        {
+          "chunkId": "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+          "relevance": 3
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q029",
+      "query": "\"finite sequence of rigorous instructions\"",
+      "category": "EXACT_PHRASE",
+      "relevantChunks": [
+        {
+          "chunkId": "01a6fb7f-c897-4eef-bcc8-d17672889429",
+          "relevance": 3
+        },
+        {
+          "chunkId": "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q030",
+      "query": "\"Context Gateway\"",
+      "category": "EXACT_PHRASE",
+      "relevantChunks": [
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        },
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "Q031",
+      "query": "\"Documentation/process/changes.rst\"",
+      "category": "EXACT_PHRASE",
+      "relevantChunks": [
+        {
+          "chunkId": "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "Q032",
+      "query": "\"Book of Indian computation\"",
+      "category": "EXACT_PHRASE",
+      "relevantChunks": [
+        {
+          "chunkId": "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "Q033",
+      "query": "\"Agent Mesh\"",
+      "category": "EXACT_PHRASE",
+      "relevantChunks": [
+        {
+          "chunkId": "465eb1de-319d-467c-84e6-512aacc5fad5",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "Q034",
+      "query": "\"Jacquard loom\"",
+      "category": "EXACT_PHRASE",
+      "relevantChunks": [
+        {
+          "chunkId": "e5ac9713-5ddb-4eac-b953-ff1488711510",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "Q035",
+      "query": "guidelines and documentation files for academic researchers exploring Linux kernel internals",
+      "category": "LONG_TAIL",
+      "relevantChunks": [
+        {
+          "chunkId": "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+          "relevance": 3
+        },
+        {
+          "chunkId": "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q036",
+      "query": "ancient clay tablets and division arithmetic algorithms before mechanical calculation",
+      "category": "LONG_TAIL",
+      "relevantChunks": [
+        {
+          "chunkId": "a089af33-4d90-44b4-86d9-35fedfdb844f",
+          "relevance": 3
+        },
+        {
+          "chunkId": "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+          "relevance": 1
+        }
+      ]
+    },
+    {
+      "id": "Q037",
+      "query": "persisting agent conversations and routing streams through dropped network connections with Agent Mesh",
+      "category": "LONG_TAIL",
+      "relevantChunks": [
+        {
+          "chunkId": "465eb1de-319d-467c-84e6-512aacc5fad5",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        }
+      ]
+    },
+    {
+      "id": "Q038",
+      "query": "blocking command line git pushes that expose private personal email address",
+      "category": "LONG_TAIL",
+      "relevantChunks": [
+        {
+          "chunkId": "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+          "relevance": 3
+        },
+        {
+          "chunkId": "0cd66fd4-7598-425b-a599-f4c19dc692cb",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q039",
+      "query": "formal equivalence between lambda calculus Turing machines and general recursive functions",
+      "category": "LONG_TAIL",
+      "relevantChunks": [
+        {
+          "chunkId": "0aadad74-10bd-41a5-903d-64b93d79fe18",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a5d940be-1e53-4d36-8f07-740d13485096",
+          "relevance": 2
+        }
+      ]
+    },
+    {
+      "id": "Q040",
+      "query": "turn agent behavior into an explainable queryable record of decisions with Lens in Redis Iris",
+      "category": "LONG_TAIL",
+      "relevantChunks": [
+        {
+          "chunkId": "2501fd81-3b18-4e04-bffa-b89f806436b1",
+          "relevance": 3
+        },
+        {
+          "chunkId": "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+          "relevance": 3
+        }
+      ]
+    }
+  ]
+}
