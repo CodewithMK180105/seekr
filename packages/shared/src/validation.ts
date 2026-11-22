@@ -58,6 +58,7 @@ export const searchQuerySchema = z.object({
   page: z.coerce.number().int().positive('Page must be a positive integer').default(1),
   limit: z.coerce.number().int().min(1).max(100, 'Limit cannot exceed 100').default(10),
   sourceId: z.string().uuid('Invalid source ID format').optional(),
+  skipCache: z.coerce.boolean().default(false).optional(),
 });
 
 export type SearchQueryInput = z.infer<typeof searchQuerySchema>;

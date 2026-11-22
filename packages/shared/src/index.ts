@@ -9,3 +9,4 @@ export * from './ssrfGuard.js';
 export * from './chunker.js';
 export * from './embeddings/index.js';
 export * from './llm/index.js';
+export * from './cache/index.js';

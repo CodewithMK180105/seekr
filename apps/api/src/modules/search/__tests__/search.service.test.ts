@@ -37,10 +37,17 @@ describe('SearchService Unit Tests', () => {
       search: vi.fn(),
     };
     rrfService = new RrfRankingService();
+    const mockLogging = { logSearch: vi.fn().mockResolvedValue(undefined) } as any;
+    const mockCache = {
+      findMatch: vi.fn().mockResolvedValue({ matched: false }),
+      store: vi.fn().mockResolvedValue(undefined),
+    } as any;
     searchService = new SearchService(
       mockKeywordRetriever,
       mockVectorRetriever,
-      rrfService
+      rrfService,
+      mockLogging,
+      mockCache
     );
   });
 

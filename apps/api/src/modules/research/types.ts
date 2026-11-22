@@ -66,6 +66,7 @@ export interface ResearchRequest {
   maxSources?: number;
   temperature?: number;
   userId?: string;
+  skipCache?: boolean;
 }
 
 export interface ResearchResponse {
@@ -81,6 +82,9 @@ export interface ResearchResponse {
   insufficientReason?: string;
   usage?: LlmUsageMetadata;
   createdAt?: string;
+  cached?: boolean;
+  cacheType?: 'EXACT' | 'SEMANTIC';
+  cacheSimilarity?: number;
 }
 
 export interface DetailedSourceDTO {

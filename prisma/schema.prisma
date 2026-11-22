@@ -197,3 +197,21 @@ model ResearchSession {
   @@index([searchMode])
   @@map("research_sessions")
 }
+
+model SemanticCache {
+  id              String   @id @default(uuid()) @db.Uuid
+  cacheType       String   @map("cache_type") // SEARCH | RESEARCH
+  query           String   @db.Text
+  normalizedQuery String   @map("normalized_query")
+  searchMode      String?  @map("search_mode")
+  embedding       Unsupported("vector(768)")
+  payload         Json
+  hitCount        Int      @default(1) @map("hit_count")
+  lastAccessedAt  DateTime @default(now()) @map("last_accessed_at")
+  expiresAt       DateTime @map("expires_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([cacheType, normalizedQuery])
+  @@index([expiresAt])
+  @@map("semantic_cache")
+}

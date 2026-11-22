@@ -5,6 +5,7 @@ import { sourcesRouter } from '../modules/sources/sources.routes.js';
 import { crawlerRouter } from '../modules/crawler/crawler.routes.js';
 import { searchRouter } from '../modules/search/routes/search.routes.js';
 import { researchRouter } from '../modules/research/research.routes.js';
+import { cacheRouter } from '../modules/cache/cache.routes.js';
 import { NotFoundError } from '@seekr/shared';
 
 const router: Router = Router();
@@ -19,6 +20,7 @@ router.use('/api/v1/sources', sourcesRouter);
 router.use('/api/v1/crawl-jobs', crawlerRouter);
 router.use('/api/v1/search', searchRouter);
 router.use('/api/v1/research', researchRouter);
+router.use('/api/v1/cache', cacheRouter);
 
 // 404 Catch-all handler
 router.use('*', (req, _res, next) => {

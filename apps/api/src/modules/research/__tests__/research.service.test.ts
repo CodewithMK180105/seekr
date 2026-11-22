@@ -81,9 +81,15 @@ describe('ResearchService Integration & Unit Tests', () => {
       defaultReply: 'Redis captures snapshots using RDB [2].',
     });
 
+    const mockCache = {
+      findMatch: vi.fn().mockResolvedValue({ matched: false }),
+      store: vi.fn().mockResolvedValue(undefined),
+    } as any;
+
     const researchService = new ResearchService({
       searchService: mockSearchService as any,
       llmProvider: mockLlm,
+      semanticCache: mockCache,
     });
 
     const res = await researchService.research({

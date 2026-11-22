@@ -20,6 +20,7 @@ export const researchQuerySchema = z.object({
     .max(1, 'temperature cannot exceed 1')
     .default(0.2)
     .optional(),
+  skipCache: z.coerce.boolean().default(false).optional(),
 });
 
 export type ValidatedResearchQuery = z.infer<typeof researchQuerySchema>;

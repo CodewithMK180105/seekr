@@ -5,6 +5,7 @@ import { SearchService } from '../search/services/search.service.js';
 import { ContextAssembler, DEFAULT_SYSTEM_INSTRUCTION } from './context-assembler.js';
 import { CitationPostProcessor, VerifiedCitation } from './citation-post-processor.js';
 import { ResearchRepository } from './research.repository.js';
+import { SemanticCacheService } from '../cache/semantic-cache.service.js';
 import {
   ResearchRequest,
   ResearchResponse,
@@ -26,6 +27,7 @@ export class ResearchService {
   private assembler: ContextAssembler;
   private citationPostProcessor: CitationPostProcessor;
   private researchRepository: ResearchRepository;
+  private semanticCache: SemanticCacheService;
 
   constructor(options: {
     searchService?: SearchService;
@@ -33,12 +35,14 @@ export class ResearchService {
     assemblerOptions?: ContextAssemblerOptions;
     researchRepository?: ResearchRepository;
     citationPostProcessor?: CitationPostProcessor;
+    semanticCache?: SemanticCacheService;
   } = {}) {
     this.searchService = options.searchService || new SearchService();
     this.explicitLlmProvider = options.llmProvider;
     this.assembler = new ContextAssembler(options.assemblerOptions);
     this.citationPostProcessor = options.citationPostProcessor || new CitationPostProcessor();
     this.researchRepository = options.researchRepository || new ResearchRepository();
+    this.semanticCache = options.semanticCache || new SemanticCacheService();
   }
 
   private get llmProvider(): LlmProvider {
@@ -57,6 +61,36 @@ export class ResearchService {
     const startTime = performance.now();
     const sessionId = randomUUID();
     const searchMode = request.searchMode || 'HYBRID';
+
+    // 0. Check Semantic Cache (Exact L1 + Semantic L2)
+    if (!request.skipCache && !preRetrievedResults) {
+      const cacheMatch = await this.semanticCache.findMatch<ResearchResponse>({
+        cacheType: 'RESEARCH',
+        query: request.query,
+        searchMode,
+      });
+
+      if (cacheMatch.matched && cacheMatch.payload) {
+        const latencyMs = Math.round(performance.now() - startTime);
+        const cachedResponse: ResearchResponse = {
+          ...cacheMatch.payload,
+          id: sessionId,
+          sessionId,
+          query: request.query,
+          latencyMs,
+          cached: true,
+          cacheType: cacheMatch.matchStrategy,
+          cacheSimilarity: cacheMatch.similarity,
+          createdAt: new Date().toISOString(),
+        };
+
+        if (options.persist) {
+          await this.persistSession(cachedResponse, request.userId);
+        }
+
+        return cachedResponse;
+      }
+    }
 
     // 1. Fetch retrieval results if not supplied directly
     let candidateResults: SearchResultItem[] = preRetrievedResults || [];
@@ -137,6 +171,18 @@ export class ResearchService {
       await this.persistSession(response, request.userId);
     }
 
+    // 8. Store in Semantic Cache asynchronously
+    if (!request.skipCache && !assembled.insufficientContext) {
+      this.semanticCache
+        .store({
+          cacheType: 'RESEARCH',
+          query: request.query,
+          searchMode,
+          payload: response,
+        })
+        .catch(() => {});
+    }
+
     return response;
   }
 
@@ -152,6 +198,57 @@ export class ResearchService {
     const startTime = performance.now();
     const sessionId = randomUUID();
     const searchMode = request.searchMode || 'HYBRID';
+
+    // 0. Check Semantic Cache (Exact L1 + Semantic L2)
+    if (!request.skipCache && !preRetrievedResults) {
+      const cacheMatch = await this.semanticCache.findMatch<ResearchResponse>({
+        cacheType: 'RESEARCH',
+        query: request.query,
+        searchMode,
+      });
+
+      if (cacheMatch.matched && cacheMatch.payload) {
+        const cached = cacheMatch.payload;
+        const latencyMs = Math.round(performance.now() - startTime);
+
+        if (callbacks.onSources) {
+          await callbacks.onSources(cached.sources || []);
+        }
+
+        if (callbacks.onToken && cached.answer) {
+          const words = cached.answer.split(' ');
+          for (let i = 0; i < words.length; i++) {
+            if (signal?.aborted) return cached;
+            const token = i === 0 ? words[i] : ' ' + words[i];
+            await callbacks.onToken(token);
+          }
+        }
+
+        if (callbacks.onCitations) {
+          await callbacks.onCitations(cached.citations || []);
+        }
+
+        const cachedResponse: ResearchResponse = {
+          ...cached,
+          id: sessionId,
+          sessionId,
+          query: request.query,
+          latencyMs,
+          cached: true,
+          cacheType: cacheMatch.matchStrategy,
+          cacheSimilarity: cacheMatch.similarity,
+          createdAt: new Date().toISOString(),
+        };
+
+        await this.persistSession(cachedResponse, request.userId);
+
+        if (callbacks.onComplete) {
+          await callbacks.onComplete(cachedResponse);
+        }
+
+        return cachedResponse;
+      }
+    }
 
     // 1. Fetch retrieval results if not supplied directly
     let candidateResults: SearchResultItem[] = preRetrievedResults || [];
@@ -264,6 +361,18 @@ export class ResearchService {
     // 9. Emit complete event
     if (callbacks.onComplete) {
       await callbacks.onComplete(finalResponse);
+    }
+
+    // 10. Store in Semantic Cache asynchronously
+    if (!request.skipCache && !assembled.insufficientContext && accumulatedText.trim().length > 0) {
+      this.semanticCache
+        .store({
+          cacheType: 'RESEARCH',
+          query: request.query,
+          searchMode,
+          payload: finalResponse,
+        })
+        .catch(() => {});
     }
 
     return finalResponse;

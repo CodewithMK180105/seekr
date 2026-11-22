@@ -5,9 +5,9 @@ Tracking implementation status across development milestones.
 ---
 
 ## Overall Status
-- **Current Phase**: Phase 5 — RAG Research Engine (Milestones 5.1, 5.2, 5.3 & 5.4 Completed)
-- **Next Milestone**: Phase 6 — Optimization & Observability (Caching, Rate Limiting & Performance)
-- **Automated Tests**: 220 / 220 Passing across 31 test suites (Unit, Integration & API)
+- **Current Phase**: Phase 6 — Optimization & Observability (Milestone 6.1 Completed)
+- **Next Milestone**: Milestone 6.2 — API Rate Limiting & Quota Management
+- **Automated Tests**: 238 / 238 Passing across 34 test suites (Unit, Integration & API)
 
 ---
 
@@ -183,9 +183,15 @@ Tracking implementation status across development milestones.
 ---
 
 ### Phase 6: Optimization & Observability
-- [ ] Redis search caching and cache invalidation.
-- [ ] API rate limiting.
-- [ ] Benchmark suite (Precision@10, Recall@10, MRR, nDCG@10, latency p50/p95).
+- [x] **Milestone 6.1: Multi-Tier Redis & pgvector Semantic Caching**:
+  - [x] Level 1: Redis exact-match cache for search results and research payloads (`seekr:cache:exact:...`) with TTL.
+  - [x] Level 2: PostgreSQL `semantic_cache` table with pgvector HNSW cosine distance index matching semantically similar queries ($\ge 0.95$ for search, $\ge 0.96$ for research).
+  - [x] Level 3: `CachedEmbeddingProvider` caching dense 768-dim vectors in Redis (`seekr:cache:emb:...`) with 7-day TTL, completely eliminating rate limit errors on repeated queries.
+  - [x] Cache management REST endpoints (`GET /api/v1/cache/stats`, `POST /api/v1/cache/clear`, `POST /api/v1/cache/cleanup`).
+  - [x] `skipCache` parameter and `Cache-Control: no-cache` header support across Search & Research APIs.
+  - [x] Automated test suites: `redis-cache.test.ts` (6 tests), `semantic-cache.test.ts` (6 tests), `cache.api.test.ts` (6 tests). Total new tests: 18.
+- [ ] Milestone 6.2: API rate limiting & quota management (Redis sliding-window).
+- [ ] Milestone 6.3: Observability metrics & telemetry.
 
 ---
 

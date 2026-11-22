@@ -32,6 +32,7 @@ export class ResearchController {
         maxSources: validated.maxSources,
         temperature: validated.temperature,
         userId: (req as any).user?.userId,
+        skipCache: validated.skipCache || req.headers['cache-control'] === 'no-cache',
       });
 
       res.status(200).json({
@@ -85,6 +86,7 @@ export class ResearchController {
           maxSources: validated.maxSources,
           temperature: validated.temperature,
           userId: (req as any).user?.userId,
+          skipCache: validated.skipCache || req.headers['cache-control'] === 'no-cache',
         },
         {
           onSources: (sources) => {

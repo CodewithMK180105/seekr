@@ -10,6 +10,7 @@ import { KeywordRetrieverService } from './keyword-retriever.service.js';
 import { VectorRetrieverService } from './vector-retriever.service.js';
 import { RrfRankingService } from './rrf-ranking.service.js';
 import { SearchLoggingService } from './search-logging.service.js';
+import { SemanticCacheService } from '../../cache/semantic-cache.service.js';
 
 export interface SearchParams {
   query: string;
@@ -20,6 +21,7 @@ export interface SearchParams {
   userId?: string;
   sessionId?: string;
   disableLogging?: boolean;
+  skipCache?: boolean;
 }
 
 /**
@@ -41,17 +43,20 @@ export class SearchService {
   private readonly vectorRetriever: Retriever;
   private readonly rrfService: RrfRankingService;
   private readonly searchLoggingService: SearchLoggingService;
+  private readonly semanticCache: SemanticCacheService;
 
   constructor(
     keywordRetriever: Retriever = new KeywordRetrieverService(),
     vectorRetriever: Retriever = new VectorRetrieverService(),
     rrfService: RrfRankingService = new RrfRankingService(),
-    searchLoggingService: SearchLoggingService = new SearchLoggingService()
+    searchLoggingService: SearchLoggingService = new SearchLoggingService(),
+    semanticCache: SemanticCacheService = new SemanticCacheService()
   ) {
     this.keywordRetriever = keywordRetriever;
     this.vectorRetriever = vectorRetriever;
     this.rrfService = rrfService;
     this.searchLoggingService = searchLoggingService;
+    this.semanticCache = semanticCache;
   }
 
   /**
@@ -85,6 +90,56 @@ export class SearchService {
         },
         latencyMs: Date.now() - startTime,
       };
+    }
+
+    // 2. Check Cache (Exact L1 + Semantic L2) for first-page un-scoped queries
+    if (!params.skipCache && page === 1 && !params.sourceId) {
+      const cacheMatch = await this.semanticCache.findMatch<SearchResultItem[]>({
+        cacheType: 'SEARCH',
+        query: cleanQuery,
+        searchMode: mode,
+      });
+
+      if (cacheMatch.matched && cacheMatch.payload) {
+        const cachedResults = cacheMatch.payload.slice(0, limit);
+        const latencyMs = Date.now() - startTime;
+
+        if (!params.disableLogging) {
+          this.searchLoggingService
+            .logSearch({
+              searchQueryId,
+              userId: params.userId,
+              sessionId: params.sessionId,
+              query: cleanQuery,
+              searchMode: mode,
+              resultCount: cachedResults.length,
+              latencyMs,
+              page,
+              limit,
+              results: cachedResults,
+            })
+            .catch(() => {});
+        }
+
+        return {
+          searchId: searchQueryId,
+          searchQueryId,
+          query: cleanQuery,
+          mode,
+          results: cachedResults,
+          pagination: {
+            page: 1,
+            limit,
+            offset: 0,
+            total: cacheMatch.payload.length,
+            hasMore: cacheMatch.payload.length > limit,
+          },
+          latencyMs,
+          cached: true,
+          cacheType: cacheMatch.matchStrategy,
+          cacheSimilarity: cacheMatch.similarity,
+        };
+      }
     }
 
     // Determine candidate retrieval depth to ensure accurate ranking prior to pagination
@@ -242,6 +297,18 @@ export class SearchService {
         .catch((err) => {
           console.warn('[SearchService] Async logging dispatch error:', err);
         });
+    }
+
+    // Populate cache asynchronously for first-page un-scoped non-degraded queries if results exist
+    if (!params.skipCache && !degraded && page === 1 && !params.sourceId && pagedResults.length > 0) {
+      this.semanticCache
+        .store({
+          cacheType: 'SEARCH',
+          query: cleanQuery,
+          searchMode: mode,
+          payload: pagedResults,
+        })
+        .catch(() => {});
     }
 
     return response;

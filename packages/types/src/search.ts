@@ -36,6 +36,9 @@ export interface SearchResponse {
   latencyMs: number;
   degraded?: boolean;
   degradedReason?: string;
+  cached?: boolean;
+  cacheType?: 'EXACT' | 'SEMANTIC';
+  cacheSimilarity?: number;
 }
 
 export interface SuggestionsResponse {

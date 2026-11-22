@@ -42,6 +42,7 @@ export async function search(
       sourceId: input.sourceId,
       userId,
       sessionId,
+      skipCache: input.skipCache || req.headers['cache-control'] === 'no-cache',
     });
 
     const response: ApiResponse<SearchResponse> = {
