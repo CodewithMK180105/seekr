@@ -1,6 +1,11 @@
 import { Job } from 'bullmq';
 import axios from 'axios';
-import { prisma, getIndexerQueue } from '@seekr/shared';
+import {
+  prisma,
+  getIndexerQueue,
+  crawlerJobsProcessedTotal,
+  crawlerJobDurationSeconds,
+} from '@seekr/shared';
 import { CrawlJobData } from '@seekr/types';
 import { validateSafeUrl } from '../services/ssrfGuard.js';
 import { robotsService } from '../services/robotsService.js';
@@ -8,6 +13,7 @@ import { extractContent } from '../services/contentExtractor.js';
 import { normalizeTextAndHash } from '../services/normalizer.js';
 
 export async function processCrawlJob(job: Job<CrawlJobData>): Promise<void> {
+  const jobStartTime = performance.now();
   const { crawlJobId, sourceId, baseUrl, maxPages = 10, maxDepth = 2 } = job.data;
 
   console.log(`[CrawlProcessor] Starting job ${job.id} for source ${sourceId} (${baseUrl})`);
@@ -171,11 +177,16 @@ export async function processCrawlJob(job: Job<CrawlJobData>): Promise<void> {
       },
     });
 
+    crawlerJobsProcessedTotal.inc({ status: 'completed' });
+    crawlerJobDurationSeconds.observe((performance.now() - jobStartTime) / 1000);
+
     console.log(
       `[CrawlProcessor] Completed crawl job ${crawlJobId}. Processed: ${pagesProcessed}, Failed: ${pagesFailed}`
     );
   } catch (err: any) {
     console.error(`[CrawlProcessor] Fatal error for job ${crawlJobId}:`, err);
+    crawlerJobsProcessedTotal.inc({ status: 'failed' });
+    crawlerJobDurationSeconds.observe((performance.now() - jobStartTime) / 1000);
     await prisma.crawlJob.update({
       where: { id: crawlJobId },
       data: {

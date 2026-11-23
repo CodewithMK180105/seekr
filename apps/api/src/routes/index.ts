@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getLiveness, getReadiness } from '../modules/health/health.controller.js';
+import { getMetrics } from '../modules/metrics/metrics.controller.js';
 import { authRouter } from '../modules/auth/auth.routes.js';
 import { sourcesRouter } from '../modules/sources/sources.routes.js';
 import { crawlerRouter } from '../modules/crawler/crawler.routes.js';
@@ -11,9 +12,10 @@ import { NotFoundError } from '@seekr/shared';
 
 const router: Router = Router();
 
-// System Health Checks (bypasses rate limiting)
+// System Health & Observability Checks (bypasses rate limiting)
 router.get('/health', getLiveness);
 router.get('/ready', getReadiness);
+router.get('/metrics', getMetrics);
 
 // API v1 Routes
 router.use('/api/v1/auth', globalApiRateLimiter, authRouter);

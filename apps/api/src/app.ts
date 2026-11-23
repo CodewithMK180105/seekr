@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { requestLogger } from './middleware/requestLogger.js';
+import { httpMetricsMiddleware } from './middleware/metrics.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { appRouter } from './routes/index.js';
 import { config } from './config/index.js';
@@ -26,6 +27,7 @@ export function createApp(): Express {
   app.use(express.json({ limit: '2mb' }));
   app.use(express.urlencoded({ extended: true, limit: '2mb' }));
   app.use(requestLogger);
+  app.use(httpMetricsMiddleware);
 
   // Mount API Routes
   app.use(appRouter);

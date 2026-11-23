@@ -1,5 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { prisma as defaultPrisma, getEmbeddingProvider, EmbeddingProvider } from '@seekr/shared';
+import {
+  prisma as defaultPrisma,
+  getEmbeddingProvider,
+  EmbeddingProvider,
+  retrievalDurationSeconds,
+} from '@seekr/shared';
 import { Retriever, RankedSearchResult } from '../search.types.js';
 
 interface RawVectorRow {
@@ -70,6 +75,7 @@ export class VectorRetrieverService implements Retriever {
     }
     const targetSourceId = sourceId && UUID_REGEX.test(sourceId) ? sourceId : null;
 
+    const startTime = performance.now();
     try {
       // 4. Generate query embedding
       const queryEmbedding = await this.embeddingProvider.embedText(cleanQuery);
@@ -118,6 +124,8 @@ export class VectorRetrieverService implements Retriever {
     } catch (err) {
       console.error('[VectorRetrieverService] Error executing vector search:', err);
       return [];
+    } finally {
+      retrievalDurationSeconds.observe({ retriever: 'vector' }, (performance.now() - startTime) / 1000);
     }
   }
 }

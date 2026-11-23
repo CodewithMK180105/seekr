@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { prisma as defaultPrisma } from '@seekr/shared';
+import { prisma as defaultPrisma, retrievalDurationSeconds } from '@seekr/shared';
 import { Retriever, RankedSearchResult } from '../search.types.js';
 
 interface RawKeywordRow {
@@ -67,6 +67,7 @@ export class KeywordRetrieverService implements Retriever {
     }
     const targetSourceId = sourceId && UUID_REGEX.test(sourceId) ? sourceId : null;
 
+    const startTime = performance.now();
     try {
       // 4. Execute parameterized SQL query
       // Uses websearch_to_tsquery with plainto_tsquery fallback.
@@ -117,6 +118,8 @@ export class KeywordRetrieverService implements Retriever {
     } catch (err) {
       console.error('[KeywordRetrieverService] Error executing full-text search:', err);
       return [];
+    } finally {
+      retrievalDurationSeconds.observe({ retriever: 'keyword' }, (performance.now() - startTime) / 1000);
     }
   }
 }

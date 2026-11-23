@@ -1,5 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import {
+  searchRequestsTotal,
+  searchZeroResultsTotal,
+  searchFailuresTotal,
+  searchDurationSeconds,
+} from '@seekr/shared';
+import {
   SearchMode,
   SearchResponse,
   SearchResultItem,
@@ -119,6 +125,12 @@ export class SearchService {
               results: cachedResults,
             })
             .catch(() => {});
+        }
+
+        searchRequestsTotal.inc({ mode, status: 'success' });
+        searchDurationSeconds.observe({ mode }, latencyMs / 1000);
+        if (cachedResults.length === 0) {
+          searchZeroResultsTotal.inc({ mode });
         }
 
         return {
@@ -309,6 +321,15 @@ export class SearchService {
           payload: pagedResults,
         })
         .catch(() => {});
+    }
+
+    searchRequestsTotal.inc({ mode, status: degraded ? 'degraded' : 'success' });
+    searchDurationSeconds.observe({ mode }, latencyMs / 1000);
+    if (pagedResults.length === 0) {
+      searchZeroResultsTotal.inc({ mode });
+    }
+    if (degraded) {
+      searchFailuresTotal.inc({ mode, reason: degradedReason || 'retriever_degraded' });
     }
 
     return response;

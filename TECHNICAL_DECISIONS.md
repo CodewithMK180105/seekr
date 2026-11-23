@@ -311,3 +311,41 @@ This document records the architectural and technical decisions made during the 
   - Completely prevents boundary burst attacks with true sliding-window accuracy.
   - Enforces strict cost controls on expensive LLM generation routes without choking keystroke autocomplete.
   - Zero external npm package bloat; fully verified by automated unit and integration tests.
+
+---
+
+## ADR 021: Production Observability Metrics & Telemetry via Prometheus Exposition (`GET /metrics`)
+- **Status**: Accepted
+- **Context**: As Seekr transitions toward production deployment (Phase 7), the platform requires continuous operational visibility across HTTP API traffic, search retrieval latency, LLM inference token consumption, multi-tier cache hit ratios, rate limiting violations, BullMQ background crawler pipelines, and Node.js process runtime health. We need a standardized exposition format compatible with modern monitoring ecosystems (Prometheus, Grafana, Datadog) that introduces near-zero latency overhead to the request path and strictly prevents high-cardinality label explosions or data privacy leakage.
+- **Decision**:
+  1. **Prometheus Exposition Format & Centralized Registry**:
+     - Standardized on `prom-client` with a single centralized `metricsRegistry` initialized in `@seekr/shared`.
+     - Exposed via `GET /metrics` returning `text/plain; version=0.0.4; charset=utf-8` by default, with structured JSON format negotiation supported via `?format=json` or `Accept: application/json`.
+     - Explicitly exempt from API rate limiting (matching `/health` and `/ready`) to ensure scrape probes are never throttled.
+  2. **Metric Naming Conventions**:
+     - All metrics follow the Prometheus standard naming convention `seekr_<subsystem>_<name>_<unit>`:
+       - `seekr_http_requests_total` & `seekr_http_request_duration_seconds`
+       - `seekr_search_requests_total`, `seekr_search_duration_seconds`, & `seekr_retrieval_duration_seconds`
+       - `seekr_research_requests_total`, `seekr_research_tokens_total`, `seekr_llm_generation_duration_seconds`, & `seekr_research_citations_per_session`
+       - `seekr_cache_lookups_total`, `seekr_cache_entries_active`, `seekr_cache_hit_ratio`, & `seekr_cache_lookup_duration_seconds`
+       - `seekr_rate_limit_exceeded_total`
+       - `seekr_queue_jobs_*` & `seekr_crawler_jobs_processed_total`
+  3. **Strict Label Cardinality & Privacy Enforcement**:
+     - Implemented `normalizeRoute()` middleware replacing UUIDs (`/[0-9a-f]{8}-[0-9a-f]{4}.../gi`) with `:id`, stripping query parameters, and normalizing route templates.
+     - Never exposed high-cardinality identifiers: zero raw user queries, zero generated LLM answers, zero client IPs, zero user IDs, and zero API tokens in metric labels.
+     - Labels are bounded to controlled enums: `method`, `route`, `status_code`, `mode` (`KEYWORD`|`SEMANTIC`|`HYBRID`), `retriever` (`keyword`|`vector`), `token_type` (`prompt`|`completion`|`total`), `tier` (`exact`|`semantic`), `category` (`search`|`research`|`suggestions`|`global`).
+  4. **Histogram Bucket Strategy**:
+     - Tailored granular histogram buckets per subsystem:
+       - HTTP request latency: `[0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]` seconds (capturing P50, P90, P99 API distributions).
+       - Component retrieval: `[0.002, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2]` seconds.
+       - End-to-end RAG research synthesis: `[0.1, 0.25, 0.5, 1, 2, 3, 5, 10, 20, 30]` seconds.
+       - Cache lookups: `[0.0005, 0.001, 0.002, 0.005, 0.01, 0.025, 0.05, 0.1]` seconds.
+  5. **Non-Blocking Telemetry & Fail-Safe Architecture**:
+     - Metric recording never blocks business logic or user responses (`res.on('finish')`, non-blocking event loops, try/catch safety boundaries).
+     - On scrape invocation (`GET /metrics`), queue counts and cache metrics synchronize asynchronously using `Promise.allSettled` to prevent scrape timeouts if Redis or BullMQ workers are under heavy load.
+  6. **Runtime & Process Telemetry**:
+     - Embedded Node.js runtime metrics via `collectDefaultMetrics` with `seekr_` prefix tracking event-loop lag, heap memory, external memory, RSS, process CPU usage, and uptime.
+- **Consequences**:
+  - Full observability across the entire ingest, search, research, cache, and rate limiting pipelines.
+  - Ready for immediate integration with Prometheus scrapers, Grafana dashboards, and Kubernetes alerting.
+  - Zero performance degradation on search or streaming endpoints with strictly bounded memory footprint.

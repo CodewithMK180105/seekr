@@ -161,14 +161,19 @@ describe('SemanticCacheService Integration Tests', () => {
   });
 
   it('invalidates cache entries by type and aggregates stats', async () => {
+    const embSearch = await mockProvider.embedText('Search test invalidation query');
+    const embResearch = await mockProvider.embedText('Research test invalidation query');
+
     await semanticCache.store({
       cacheType: 'SEARCH',
-      query: 'Search query',
+      query: 'Search test invalidation query',
+      embedding: embSearch,
       payload: { type: 'search' },
     });
     await semanticCache.store({
       cacheType: 'RESEARCH',
-      query: 'Research query',
+      query: 'Research test invalidation query',
+      embedding: embResearch,
       payload: { type: 'research' },
     });
 

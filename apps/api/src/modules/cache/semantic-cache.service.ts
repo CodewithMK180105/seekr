@@ -1,4 +1,12 @@
-import { prisma, RedisCacheService, getEmbeddingProvider } from '@seekr/shared';
+import {
+  prisma,
+  RedisCacheService,
+  getEmbeddingProvider,
+  cacheLookupsTotal,
+  cacheLookupDurationSeconds,
+  cacheEntriesActive,
+  cacheHitRatio,
+} from '@seekr/shared';
 import { CacheType, SemanticCacheMatch, CacheStats } from '@seekr/types';
 import { config } from '../../config/index.js';
 
@@ -53,6 +61,9 @@ export class SemanticCacheService {
       return { matched: false };
     }
 
+    const cacheTypeLabel = params.cacheType.toLowerCase();
+    const l1Start = performance.now();
+
     // --------------------------------------------------------------------------
     // 1. Level 1: Redis Exact Match Cache
     // --------------------------------------------------------------------------
@@ -63,8 +74,11 @@ export class SemanticCacheService {
     );
 
     if (exactHit) {
-      // Non-blocking metric increment
+      const l1Duration = (performance.now() - l1Start) / 1000;
+      cacheLookupsTotal.inc({ tier: 'exact', cache_type: cacheTypeLabel, result: 'hit' });
+      cacheLookupDurationSeconds.observe({ tier: 'exact' }, l1Duration);
       this.redisCache.recordHit('EXACT').catch(() => {});
+
       return {
         matched: true,
         matchStrategy: 'EXACT',
@@ -73,6 +87,9 @@ export class SemanticCacheService {
         payload: exactHit,
       };
     }
+
+    cacheLookupsTotal.inc({ tier: 'exact', cache_type: cacheTypeLabel, result: 'miss' });
+    const l2Start = performance.now();
 
     // --------------------------------------------------------------------------
     // 2. Level 2: PostgreSQL pgvector Semantic Similarity Cache
@@ -86,6 +103,7 @@ export class SemanticCacheService {
       }
 
       if (!vector || vector.length === 0) {
+        cacheLookupsTotal.inc({ tier: 'semantic', cache_type: cacheTypeLabel, result: 'miss' });
         await this.redisCache.recordMiss();
         return { matched: false };
       }
@@ -142,6 +160,10 @@ export class SemanticCacheService {
       if (rows.length > 0) {
         const match = rows[0];
         const similarity = parseFloat(match.similarity);
+        const l2Duration = (performance.now() - l2Start) / 1000;
+
+        cacheLookupsTotal.inc({ tier: 'semantic', cache_type: cacheTypeLabel, result: 'hit' });
+        cacheLookupDurationSeconds.observe({ tier: 'semantic' }, l2Duration);
 
         // Async non-blocking hit count update and Redis stats
         Promise.all([
@@ -175,6 +197,9 @@ export class SemanticCacheService {
     }
 
     // Cache miss
+    const l2Duration = (performance.now() - l2Start) / 1000;
+    cacheLookupsTotal.inc({ tier: 'semantic', cache_type: cacheTypeLabel, result: 'miss' });
+    cacheLookupDurationSeconds.observe({ tier: 'semantic' }, l2Duration);
     await this.redisCache.recordMiss().catch(() => {});
     return { matched: false };
   }
@@ -305,5 +330,26 @@ export class SemanticCacheService {
       // non-blocking
     }
     return stats;
+  }
+
+  /**
+   * Synchronizes active gauge metrics with the latest PostgreSQL and Redis cache counts.
+   */
+  async syncMetricsGauges(): Promise<void> {
+    try {
+      const stats = await this.getStats();
+      cacheHitRatio.set({ tier: 'exact' }, stats.exactHitRatio);
+      cacheHitRatio.set({ tier: 'semantic' }, stats.semanticHitRatio);
+      cacheHitRatio.set({ tier: 'total' }, stats.totalHitRatio);
+      cacheEntriesActive.set({ cache_type: 'semantic' }, stats.activeEntriesCount ?? 0);
+
+      const exactCount = await this.redisCache.countExact();
+      cacheEntriesActive.set({ cache_type: 'exact' }, exactCount);
+
+      const embCount = await this.redisCache.countEmbeddings();
+      cacheEntriesActive.set({ cache_type: 'embeddings' }, embCount);
+    } catch (err) {
+      console.warn('[SemanticCacheService] Error syncing cache metrics gauges:', err);
+    }
   }
 }

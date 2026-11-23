@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { createHash } from 'node:crypto';
-import { TooManyRequestsError, RateLimiterService } from '@seekr/shared';
+import { TooManyRequestsError, RateLimiterService, rateLimitExceededTotal } from '@seekr/shared';
 import { RateLimitOptions } from '@seekr/types';
 import { config } from '../config/index.js';
 
@@ -73,6 +73,11 @@ export function createRateLimiter(
       // 5. Enforce limit
       if (!result.allowed) {
         res.setHeader('Retry-After', String(result.retryAfter));
+        try {
+          rateLimitExceededTotal.inc({ category: prefix });
+        } catch {
+          // Non-blocking telemetry
+        }
         throw new TooManyRequestsError(
           `Rate limit exceeded for ${prefix}. Please try again in ${result.retryAfter} seconds.`,
           result.retryAfter

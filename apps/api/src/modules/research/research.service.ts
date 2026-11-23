@@ -1,6 +1,16 @@
 import { randomUUID } from 'node:crypto';
 import { SearchResultItem } from '@seekr/types';
-import { LlmProvider, getLlmProvider } from '@seekr/shared';
+import {
+  LlmProvider,
+  getLlmProvider,
+  researchRequestsTotal,
+  researchTokensTotal,
+  researchStreamingRequestsTotal,
+  researchStreamingOutcomesTotal,
+  researchDurationSeconds,
+  llmGenerationDurationSeconds,
+  researchCitationsPerSession,
+} from '@seekr/shared';
 import { SearchService } from '../search/services/search.service.js';
 import { ContextAssembler, DEFAULT_SYSTEM_INSTRUCTION } from './context-assembler.js';
 import { CitationPostProcessor, VerifiedCitation } from './citation-post-processor.js';
@@ -88,6 +98,10 @@ export class ResearchService {
           await this.persistSession(cachedResponse, request.userId);
         }
 
+        researchRequestsTotal.inc({ mode: searchMode, status: 'success' });
+        researchDurationSeconds.observe({ mode: searchMode }, latencyMs / 1000);
+        researchCitationsPerSession.observe(cachedResponse.citations?.length || 0);
+
         return cachedResponse;
       }
     }
@@ -133,6 +147,10 @@ export class ResearchService {
         await this.persistSession(insufficientResponse, request.userId);
       }
 
+      researchRequestsTotal.inc({ mode: searchMode, status: 'success' });
+      researchDurationSeconds.observe({ mode: searchMode }, latencyMs / 1000);
+      researchCitationsPerSession.observe(0);
+
       return insufficientResponse;
     }
 
@@ -140,6 +158,7 @@ export class ResearchService {
     const userPrompt = this.buildUserPrompt(request.query, assembled.formattedContext);
 
     // 5. Invoke LLM provider
+    const llmStartTime = performance.now();
     const llmResponse = await this.llmProvider.generate({
       prompt: userPrompt,
       systemInstruction: DEFAULT_SYSTEM_INSTRUCTION,
@@ -147,6 +166,10 @@ export class ResearchService {
         temperature: request.temperature ?? 0.2,
       },
     });
+    llmGenerationDurationSeconds.observe(
+      { provider: this.llmProvider.name || 'gemini', model: 'default' },
+      (performance.now() - llmStartTime) / 1000
+    );
 
     // 6. Extract and verify inline citations
     const verificationResult = this.citationPostProcessor.process(llmResponse.content, assembled.sources);
@@ -183,6 +206,23 @@ export class ResearchService {
         .catch(() => {});
     }
 
+    researchRequestsTotal.inc({ mode: searchMode, status: 'success' });
+    researchDurationSeconds.observe({ mode: searchMode }, latencyMs / 1000);
+    researchCitationsPerSession.observe(response.citations.length);
+
+    if (response.usage) {
+      const provider = this.llmProvider.name || 'gemini';
+      if (response.usage.promptTokens) {
+        researchTokensTotal.inc({ token_type: 'prompt', provider, model: 'default' }, response.usage.promptTokens);
+      }
+      if (response.usage.completionTokens) {
+        researchTokensTotal.inc({ token_type: 'completion', provider, model: 'default' }, response.usage.completionTokens);
+      }
+      if (response.usage.totalTokens) {
+        researchTokensTotal.inc({ token_type: 'total', provider, model: 'default' }, response.usage.totalTokens);
+      }
+    }
+
     return response;
   }
 
@@ -198,6 +238,7 @@ export class ResearchService {
     const startTime = performance.now();
     const sessionId = randomUUID();
     const searchMode = request.searchMode || 'HYBRID';
+    researchStreamingRequestsTotal.inc();
 
     // 0. Check Semantic Cache (Exact L1 + Semantic L2)
     if (!request.skipCache && !preRetrievedResults) {
@@ -375,6 +416,7 @@ export class ResearchService {
         .catch(() => {});
     }
 
+    researchStreamingOutcomesTotal.inc({ outcome: 'completed' });
     return finalResponse;
   }
 

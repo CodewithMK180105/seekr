@@ -5,9 +5,9 @@ Tracking implementation status across development milestones.
 ---
 
 ## Overall Status
-- **Current Phase**: Phase 6 — Optimization & Observability (Milestone 6.1 Completed)
-- **Next Milestone**: Milestone 6.2 — API Rate Limiting & Quota Management
-- **Automated Tests**: 238 / 238 Passing across 34 test suites (Unit, Integration & API)
+- **Current Phase**: Phase 6 — Optimization & Observability (Completed ✅)
+- **Next Phase**: Phase 7 — Frontend & Deployment
+- **Automated Tests**: 266 / 266 Passing across 39 test suites (Unit, Integration & API)
 
 ---
 
@@ -182,7 +182,7 @@ Tracking implementation status across development milestones.
 
 ---
 
-### Phase 6: Optimization & Observability
+### Phase 6: Optimization & Observability ✅
 - [x] **Milestone 6.1: Multi-Tier Redis & pgvector Semantic Caching**:
   - [x] Level 1: Redis exact-match cache for search results and research payloads (`seekr:cache:exact:...`) with TTL.
   - [x] Level 2: PostgreSQL `semantic_cache` table with pgvector HNSW cosine distance index matching semantically similar queries ($\ge 0.88$ for search, $\ge 0.90$ for research).
@@ -204,7 +204,36 @@ Tracking implementation status across development milestones.
   - [x] Resilient fail-open strategy on transient Redis errors.
   - [x] Automated test suites: `rateLimiter.test.ts` (5 tests), `rateLimiter.api.test.ts` (6 tests). Total project tests: 249 passing across 36 suites.
   - [x] Recorded ADR 020 in `TECHNICAL_DECISIONS.md`.
-- [ ] Milestone 6.3: Observability metrics & telemetry.
+- [x] **Milestone 6.3: Observability Metrics & Telemetry**:
+  - [x] Prometheus-compliant exposition endpoint (`GET /metrics`) returning `text/plain; version=0.0.4; charset=utf-8` and structured JSON format negotiation (`?format=json` or `Accept: application/json`).
+  - [x] Monitoring bypass: `/metrics` exempt from rate limiting (matching `/health` and `/ready`).
+  - [x] HTTP traffic instrumentation via `httpMetricsMiddleware`:
+    - `seekr_http_requests_total` counter by method, route, and status_code.
+    - `seekr_http_errors_total` counter by method, route, status_code, and error_type (`4xx` vs `5xx`).
+    - `seekr_http_request_duration_seconds` histogram for latency percentiles (P50, P90, P99).
+    - `normalizeRoute()` preventing label cardinality explosion by sanitizing UUIDs to `:id` and stripping query parameters.
+  - [x] Search & retrieval metrics:
+    - `seekr_search_requests_total` and `seekr_search_duration_seconds` by mode (`KEYWORD`, `SEMANTIC`, `HYBRID`).
+    - `seekr_search_zero_results_total` and `seekr_search_failures_total`.
+    - `seekr_retrieval_duration_seconds` by retriever component (`keyword` vs `vector`).
+  - [x] RAG research & LLM telemetry:
+    - `seekr_research_requests_total`, `seekr_research_duration_seconds`, and `seekr_research_citations_per_session`.
+    - `seekr_research_tokens_total` by token_type (`prompt`, `completion`, `total`), provider, and model.
+    - `seekr_llm_generation_duration_seconds` pure LLM inference latency.
+    - `seekr_research_streaming_requests_total` and `seekr_research_streaming_outcomes_total` (`completed`, `client_abort`, `error`).
+  - [x] Multi-tier cache telemetry:
+    - `seekr_cache_lookups_total` tracking exact/semantic hits and misses.
+    - `seekr_cache_lookup_duration_seconds` measuring tier evaluation latencies.
+    - `seekr_cache_entries_active` and `seekr_cache_hit_ratio` gauges.
+  - [x] Rate limiting metrics:
+    - `seekr_rate_limit_exceeded_total` counter categorized by prefix (`search`, `research`, `suggestions`, `global`).
+  - [x] BullMQ background queue & worker telemetry:
+    - Gauges for waiting, active, completed, failed, delayed, and paused jobs (`seekr_queue_jobs_*`).
+    - `seekr_crawler_jobs_processed_total` and `seekr_crawler_job_duration_seconds`.
+  - [x] Node.js process and runtime health:
+    - Process CPU usage, memory (heap used/total, RSS, external), uptime, and event loop lag with `seekr_` prefix.
+  - [x] Automated test suites: `metrics.test.ts` (5 tests), `metrics.middleware.test.ts` (6 tests), `metrics.api.test.ts` (6 tests). Total project tests: 266 passing across 39 suites.
+  - [x] Recorded ADR 021 in `TECHNICAL_DECISIONS.md`.
 
 ---
 

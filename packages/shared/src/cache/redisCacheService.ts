@@ -188,4 +188,27 @@ export class RedisCacheService {
   async clearAllEmbeddings(): Promise<number> {
     return this.invalidatePattern('seekr:cache:emb:*');
   }
+
+  async countPattern(pattern: string): Promise<number> {
+    try {
+      let cursor = '0';
+      let total = 0;
+      do {
+        const [nextCursor, keys] = await this.redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+        cursor = nextCursor;
+        total += keys.length;
+      } while (cursor !== '0');
+      return total;
+    } catch {
+      return 0;
+    }
+  }
+
+  async countExact(): Promise<number> {
+    return this.countPattern('seekr:cache:exact:*');
+  }
+
+  async countEmbeddings(): Promise<number> {
+    return this.countPattern('seekr:cache:emb:*');
+  }
 }

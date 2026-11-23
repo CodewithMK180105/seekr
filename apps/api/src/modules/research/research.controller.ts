@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { ValidationError, NotFoundError } from '@seekr/shared';
+import {
+  ValidationError,
+  NotFoundError,
+  researchRequestsTotal,
+  researchStreamingOutcomesTotal,
+} from '@seekr/shared';
 import { researchQuerySchema } from './research.schema.js';
 import { ResearchService } from './research.service.js';
 import { ResearchRepository } from './research.repository.js';
@@ -40,6 +45,12 @@ export class ResearchController {
         data: response,
       });
     } catch (err) {
+      try {
+        researchRequestsTotal.inc({
+          mode: (req.body?.mode || 'HYBRID').toUpperCase(),
+          status: 'error',
+        });
+      } catch {}
       next(err);
     }
   };
@@ -56,6 +67,9 @@ export class ResearchController {
     res.on('close', () => {
       if (!res.writableEnded) {
         controller.abort();
+        try {
+          researchStreamingOutcomesTotal.inc({ outcome: 'client_abort' });
+        } catch {}
       }
     });
 
@@ -115,6 +129,9 @@ export class ResearchController {
         controller.signal
       );
     } catch (err: any) {
+      try {
+        researchStreamingOutcomesTotal.inc({ outcome: 'error' });
+      } catch {}
       if (headersSent) {
         // SSE headers already sent: emit structured error event
         res.write(
