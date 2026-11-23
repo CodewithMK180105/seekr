@@ -1,0 +1,2465 @@
+{
+  "benchmarkVersion": "1.0.0",
+  "timestamp": "2026-11-23T14:43:36.316Z",
+  "totalQueries": 40,
+  "categoryDistribution": {
+    "EXACT_KEYWORD": 8,
+    "CONCEPTUAL": 8,
+    "NATURAL_LANGUAGE": 8,
+    "AMBIGUOUS": 4,
+    "EXACT_PHRASE": 6,
+    "LONG_TAIL": 6
+  },
+  "latencyWarmupRuns": 2,
+  "latencyMeasuredRuns": 5,
+  "aggregateMetrics": {
+    "KEYWORD": {
+      "mode": "KEYWORD",
+      "precisionAt10": 0.075,
+      "recallAt10": 0.3896,
+      "mrr": 0.4258,
+      "ndcgAt10": 0.3778,
+      "p50LatencyMs": 47.89,
+      "p95LatencyMs": 60.77,
+      "meanLatencyMs": 28.97,
+      "minLatencyMs": 0.27,
+      "maxLatencyMs": 62.06
+    },
+    "SEMANTIC": {
+      "mode": "SEMANTIC",
+      "precisionAt10": 0.19,
+      "recallAt10": 0.9583,
+      "mrr": 0.8438,
+      "ndcgAt10": 0.8433,
+      "p50LatencyMs": 0.54,
+      "p95LatencyMs": 1.94,
+      "meanLatencyMs": 0.83,
+      "minLatencyMs": 0.29,
+      "maxLatencyMs": 2.77
+    },
+    "HYBRID": {
+      "mode": "HYBRID",
+      "precisionAt10": 0.1925,
+      "recallAt10": 0.9708,
+      "mrr": 0.8236,
+      "ndcgAt10": 0.8386,
+      "p50LatencyMs": 0.57,
+      "p95LatencyMs": 2,
+      "meanLatencyMs": 0.77,
+      "minLatencyMs": 0.28,
+      "maxLatencyMs": 2.47
+    }
+  },
+  "categoryBreakdown": {
+    "EXACT_KEYWORD": {
+      "KEYWORD": {
+        "precisionAt10": 0.175,
+        "recallAt10": 0.7813,
+        "mrr": 0.9167,
+        "ndcgAt10": 0.7987
+      },
+      "SEMANTIC": {
+        "precisionAt10": 0.225,
+        "recallAt10": 1,
+        "mrr": 0.9375,
+        "ndcgAt10": 0.8899
+      },
+      "HYBRID": {
+        "precisionAt10": 0.225,
+        "recallAt10": 1,
+        "mrr": 0.8542,
+        "ndcgAt10": 0.8658
+      }
+    },
+    "CONCEPTUAL": {
+      "KEYWORD": {
+        "precisionAt10": 0,
+        "recallAt10": 0,
+        "mrr": 0,
+        "ndcgAt10": 0
+      },
+      "SEMANTIC": {
+        "precisionAt10": 0.2,
+        "recallAt10": 0.9375,
+        "mrr": 0.743,
+        "ndcgAt10": 0.7554
+      },
+      "HYBRID": {
+        "precisionAt10": 0.2,
+        "recallAt10": 0.9375,
+        "mrr": 0.743,
+        "ndcgAt10": 0.7554
+      }
+    },
+    "NATURAL_LANGUAGE": {
+      "KEYWORD": {
+        "precisionAt10": 0.0125,
+        "recallAt10": 0.0625,
+        "mrr": 0.125,
+        "ndcgAt10": 0.0984
+      },
+      "SEMANTIC": {
+        "precisionAt10": 0.2,
+        "recallAt10": 1,
+        "mrr": 0.8542,
+        "ndcgAt10": 0.8812
+      },
+      "HYBRID": {
+        "precisionAt10": 0.2,
+        "recallAt10": 1,
+        "mrr": 0.8542,
+        "ndcgAt10": 0.8812
+      }
+    },
+    "AMBIGUOUS": {
+      "KEYWORD": {
+        "precisionAt10": 0.2,
+        "recallAt10": 0.8334,
+        "mrr": 0.8,
+        "ndcgAt10": 0.6781
+      },
+      "SEMANTIC": {
+        "precisionAt10": 0.175,
+        "recallAt10": 0.7084,
+        "mrr": 0.7857,
+        "ndcgAt10": 0.7304
+      },
+      "HYBRID": {
+        "precisionAt10": 0.2,
+        "recallAt10": 0.8334,
+        "mrr": 0.875,
+        "ndcgAt10": 0.8016
+      }
+    },
+    "EXACT_PHRASE": {
+      "KEYWORD": {
+        "precisionAt10": 0.1,
+        "recallAt10": 0.75,
+        "mrr": 0.75,
+        "ndcgAt10": 0.7178
+      },
+      "SEMANTIC": {
+        "precisionAt10": 0.1333,
+        "recallAt10": 1,
+        "mrr": 1,
+        "ndcgAt10": 0.9678
+      },
+      "HYBRID": {
+        "precisionAt10": 0.1333,
+        "recallAt10": 1,
+        "mrr": 0.9167,
+        "ndcgAt10": 0.9214
+      }
+    },
+    "LONG_TAIL": {
+      "KEYWORD": {
+        "precisionAt10": 0.0167,
+        "recallAt10": 0.1667,
+        "mrr": 0.1667,
+        "ndcgAt10": 0.1529
+      },
+      "SEMANTIC": {
+        "precisionAt10": 0.1833,
+        "recallAt10": 1,
+        "mrr": 0.7222,
+        "ndcgAt10": 0.7985
+      },
+      "HYBRID": {
+        "precisionAt10": 0.1833,
+        "recallAt10": 1,
+        "mrr": 0.7222,
+        "ndcgAt10": 0.7985
+      }
+    }
+  },
+  "queryResults": [
+    {
+      "queryId": "Q001",
+      "query": "Linux kernel source tree",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.5241,
+          "latencyMs": 0.87,
+          "returnedChunkIds": [
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.6764,
+          "latencyMs": 0.62,
+          "returnedChunkIds": [
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e",
+            "cd9490d4-e0e0-4683-98ab-7bd0675aa311",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.5077,
+          "latencyMs": 0.63,
+          "returnedChunkIds": [
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e",
+            "cd9490d4-e0e0-4683-98ab-7bd0675aa311",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q002",
+      "query": "al-Khwarizmi",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 1,
+          "ndcgAt10": 0.7453,
+          "latencyMs": 1.03,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "c54432fe-76b1-4cd1-9534-57a53781e815"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9164,
+          "latencyMs": 0.48,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "ebe4e518-92c5-4f1f-ac96-b060a4a861af"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9024,
+          "latencyMs": 0.71,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "ebe4e518-92c5-4f1f-ac96-b060a4a861af"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q003",
+      "query": "Turing machine programs",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 1,
+          "ndcgAt10": 0.7453,
+          "latencyMs": 0.38,
+          "returnedChunkIds": [
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6122,
+          "latencyMs": 0.62,
+          "returnedChunkIds": [
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "7c770107-e006-4fc5-8e1a-b57745fe3d45"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6075,
+          "latencyMs": 0.63,
+          "returnedChunkIds": [
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "7c770107-e006-4fc5-8e1a-b57745fe3d45"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q004",
+      "query": "Redis Intent Router",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.3,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9839,
+          "latencyMs": 0.52,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.3,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.39,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.3,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.54,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q005",
+      "query": "Euclid division algorithm",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 1,
+          "ndcgAt10": 0.7453,
+          "latencyMs": 0.5,
+          "returnedChunkIds": [
+            "a089af33-4d90-44b4-86d9-35fedfdb844f"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9468,
+          "latencyMs": 0.5,
+          "returnedChunkIds": [
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "228f7f7f-6430-4393-b12b-2e10fbc61495",
+            "ebe4e518-92c5-4f1f-ac96-b060a4a861af",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "7951242f-0234-4ad1-a7f8-796692ae86b1"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9468,
+          "latencyMs": 0.48,
+          "returnedChunkIds": [
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "228f7f7f-6430-4393-b12b-2e10fbc61495",
+            "ebe4e518-92c5-4f1f-ac96-b060a4a861af",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "7951242f-0234-4ad1-a7f8-796692ae86b1"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q006",
+      "query": "Agent Playbooks",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.3,
+          "recallAt10": 0.75,
+          "mrr": 1,
+          "ndcgAt10": 0.8944,
+          "latencyMs": 0.4,
+          "returnedChunkIds": [
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.4,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9843,
+          "latencyMs": 0.43,
+          "returnedChunkIds": [
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "e500e2ce-0ad4-4c65-b185-410428dcb45d",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.4,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9794,
+          "latencyMs": 0.61,
+          "returnedChunkIds": [
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "e500e2ce-0ad4-4c65-b185-410428dcb45d",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q007",
+      "query": "GitHub Enterprise Importer migrations",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.834,
+          "latencyMs": 0.49,
+          "returnedChunkIds": [
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.48,
+          "returnedChunkIds": [
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1",
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.41,
+          "returnedChunkIds": [
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1",
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q008",
+      "query": "Jacquard loom punch cards",
+      "category": "EXACT_KEYWORD",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9173,
+          "latencyMs": 0.38,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9828,
+          "latencyMs": 0.46,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0",
+            "e023aa1c-6c24-4d69-8227-49864941ed70",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "cf741c52-cfb7-43f8-9c54-969f9f934006",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9828,
+          "latencyMs": 0.62,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0",
+            "e023aa1c-6c24-4d69-8227-49864941ed70",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "cf741c52-cfb7-43f8-9c54-969f9f934006",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q009",
+      "query": "how to reduce LLM inference costs and eliminate redundant prompt lookups",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 51.98,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9049,
+          "latencyMs": 1.83,
+          "returnedChunkIds": [
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "465eb1de-319d-467c-84e6-512aacc5fad5"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9049,
+          "latencyMs": 1.7,
+          "returnedChunkIds": [
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "465eb1de-319d-467c-84e6-512aacc5fad5"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q010",
+      "query": "difference between heuristic approaches and guaranteed algorithms",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 52.4,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9049,
+          "latencyMs": 1.45,
+          "returnedChunkIds": [
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "f8813c74-4369-4aaa-84c6-5fe336315993",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "8d822ef3-32ed-496e-851d-0802e63cc4ec",
+            "86f2f48b-117e-477e-9b4c-8b45e032aa4e",
+            "66fd8025-ec24-46ca-9436-94170a55e41a",
+            "ac91a0a3-b455-4f98-a490-ab6edbec3e78",
+            "b619839e-6512-4942-ab6a-7106908827ef",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "228f7f7f-6430-4393-b12b-2e10fbc61495"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9049,
+          "latencyMs": 0.59,
+          "returnedChunkIds": [
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "f8813c74-4369-4aaa-84c6-5fe336315993",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "8d822ef3-32ed-496e-851d-0802e63cc4ec",
+            "86f2f48b-117e-477e-9b4c-8b45e032aa4e",
+            "66fd8025-ec24-46ca-9436-94170a55e41a",
+            "ac91a0a3-b455-4f98-a490-ab6edbec3e78",
+            "b619839e-6512-4942-ab6a-7106908827ef",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "228f7f7f-6430-4393-b12b-2e10fbc61495"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q011",
+      "query": "persisting state and long-term memory in autonomous AI agents",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 56,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.3,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.4975,
+          "latencyMs": 0.54,
+          "returnedChunkIds": [
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.3,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.4975,
+          "latencyMs": 1.3,
+          "returnedChunkIds": [
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q012",
+      "query": "operating system kernel guidelines and code of conduct",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 60.87,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.38,
+          "returnedChunkIds": [
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "24a261c7-be87-49b0-b7e5-935ecdb77722",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.45,
+          "returnedChunkIds": [
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "24a261c7-be87-49b0-b7e5-935ecdb77722",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q013",
+      "query": "evaluating time and memory requirements as algorithm input increases",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 57.05,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 1,
+          "ndcgAt10": 0.7872,
+          "latencyMs": 0.53,
+          "returnedChunkIds": [
+            "e89ecb94-2ffc-461a-9482-2d58a36e0a0c",
+            "24a261c7-be87-49b0-b7e5-935ecdb77722",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "228f7f7f-6430-4393-b12b-2e10fbc61495",
+            "a3315080-f951-4ae3-bb14-867441678ab3",
+            "66fd8025-ec24-46ca-9436-94170a55e41a",
+            "8d822ef3-32ed-496e-851d-0802e63cc4ec",
+            "86f2f48b-117e-477e-9b4c-8b45e032aa4e"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 1,
+          "ndcgAt10": 0.7872,
+          "latencyMs": 0.52,
+          "returnedChunkIds": [
+            "e89ecb94-2ffc-461a-9482-2d58a36e0a0c",
+            "24a261c7-be87-49b0-b7e5-935ecdb77722",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "228f7f7f-6430-4393-b12b-2e10fbc61495",
+            "a3315080-f951-4ae3-bb14-867441678ab3",
+            "66fd8025-ec24-46ca-9436-94170a55e41a",
+            "8d822ef3-32ed-496e-851d-0802e63cc4ec",
+            "86f2f48b-117e-477e-9b4c-8b45e032aa4e"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q014",
+      "query": "safeguarding private personal email addresses when pushing git commits",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 57.35,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.5,
+          "returnedChunkIds": [
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+            "0cd66fd4-7598-425b-a599-f4c19dc692cb",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "cd9490d4-e0e0-4683-98ab-7bd0675aa311",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.41,
+          "returnedChunkIds": [
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+            "0cd66fd4-7598-425b-a599-f4c19dc692cb",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "cd9490d4-e0e0-4683-98ab-7bd0675aa311",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q015",
+      "query": "theoretical formalization of effective computability and mechanical calculation",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 56.12,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.5938,
+          "latencyMs": 1.9,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "7c770107-e006-4fc5-8e1a-b57745fe3d45",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "3498b627-da95-46fe-9a88-91c555b582b1"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.5938,
+          "latencyMs": 0.42,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "7c770107-e006-4fc5-8e1a-b57745fe3d45",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "3498b627-da95-46fe-9a88-91c555b582b1"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q016",
+      "query": "accessing business data from LLM agents with standardized schemas",
+      "category": "CONCEPTUAL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 51.96,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.1111,
+          "ndcgAt10": 0.3546,
+          "latencyMs": 0.44,
+          "returnedChunkIds": [
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.1111,
+          "ndcgAt10": 0.3546,
+          "latencyMs": 0.45,
+          "returnedChunkIds": [
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q017",
+      "query": "Where does the word algorithm come from historically?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 52.58,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9357,
+          "latencyMs": 0.51,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9357,
+          "latencyMs": 0.43,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q018",
+      "query": "What documentation covers system administration for Linux kernels?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 54.16,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9461,
+          "latencyMs": 0.49,
+          "returnedChunkIds": [
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9461,
+          "latencyMs": 0.57,
+          "returnedChunkIds": [
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q019",
+      "query": "What are the main capabilities of Redis Iris for AI developers?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 56.33,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.3,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.5942,
+          "latencyMs": 0.57,
+          "returnedChunkIds": [
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.3,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.5942,
+          "latencyMs": 0.43,
+          "returnedChunkIds": [
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q020",
+      "query": "How did telephone switching machines and looms lead to modern computers?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 56.35,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.45,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 1.74,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q021",
+      "query": "Why do AI agents need persistent context across conversations?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 59.16,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9049,
+          "latencyMs": 0.42,
+          "returnedChunkIds": [
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9049,
+          "latencyMs": 0.38,
+          "returnedChunkIds": [
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q022",
+      "query": "How do live repository migrations minimize downtime for engineering teams?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 52.98,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.36,
+          "returnedChunkIds": [
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.49,
+          "returnedChunkIds": [
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "1be2beb3-64d9-4f62-91dd-89775d155623",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q023",
+      "query": "What formal models proved equivalent in algorithmic theory?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 1,
+          "ndcgAt10": 0.7872,
+          "latencyMs": 0.31,
+          "returnedChunkIds": [
+            "0aadad74-10bd-41a5-903d-64b93d79fe18"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9324,
+          "latencyMs": 1.72,
+          "returnedChunkIds": [
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "3498b627-da95-46fe-9a88-91c555b582b1",
+            "e89ecb94-2ffc-461a-9482-2d58a36e0a0c",
+            "4957f14b-9e4a-4c0b-b2ff-c146e382f6a2",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9324,
+          "latencyMs": 0.52,
+          "returnedChunkIds": [
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "3498b627-da95-46fe-9a88-91c555b582b1",
+            "e89ecb94-2ffc-461a-9482-2d58a36e0a0c",
+            "4957f14b-9e4a-4c0b-b2ff-c146e382f6a2",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q024",
+      "query": "How does matching questions by meaning speed up responses?",
+      "category": "NATURAL_LANGUAGE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 47.94,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.7364,
+          "latencyMs": 0.67,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "86f2f48b-117e-477e-9b4c-8b45e032aa4e",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "24a261c7-be87-49b0-b7e5-935ecdb77722",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "b1246d80-099c-4076-b411-e5eab0654ec4"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.7364,
+          "latencyMs": 0.5,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "86f2f48b-117e-477e-9b4c-8b45e032aa4e",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "24a261c7-be87-49b0-b7e5-935ecdb77722",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "b1246d80-099c-4076-b411-e5eab0654ec4"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q025",
+      "query": "memory",
+      "category": "AMBIGUOUS",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.2,
+          "recallAt10": 0.6667,
+          "mrr": 0.2,
+          "ndcgAt10": 0.3903,
+          "latencyMs": 1.72,
+          "returnedChunkIds": [
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 0.6667,
+          "mrr": 1,
+          "ndcgAt10": 0.7753,
+          "latencyMs": 0.43,
+          "returnedChunkIds": [
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "78ea6b05-6ea3-4842-b46a-c8dfd0ed2cd3",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "4ec832a6-4162-4a8e-a3c7-b0c4424f09f3",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "dce409ed-f04e-4445-a78a-0c5be52e8d9c",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "e023aa1c-6c24-4d69-8227-49864941ed70"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 0.6667,
+          "mrr": 1,
+          "ndcgAt10": 0.7516,
+          "latencyMs": 1.7,
+          "returnedChunkIds": [
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q026",
+      "query": "routing",
+      "category": "AMBIGUOUS",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.2,
+          "recallAt10": 0.6667,
+          "mrr": 1,
+          "ndcgAt10": 0.7226,
+          "latencyMs": 0.55,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "b1246d80-099c-4076-b411-e5eab0654ec4"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 0.6667,
+          "mrr": 1,
+          "ndcgAt10": 0.8839,
+          "latencyMs": 1.54,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "8d822ef3-32ed-496e-851d-0802e63cc4ec",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "b619839e-6512-4942-ab6a-7106908827ef",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "3e5df795-6583-4315-9055-e639dd847617",
+            "f8813c74-4369-4aaa-84c6-5fe336315993",
+            "66fd8025-ec24-46ca-9436-94170a55e41a"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 0.6667,
+          "mrr": 1,
+          "ndcgAt10": 0.8129,
+          "latencyMs": 0.55,
+          "returnedChunkIds": [
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "8d822ef3-32ed-496e-851d-0802e63cc4ec",
+            "b619839e-6512-4942-ab6a-7106908827ef"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q027",
+      "query": "migration",
+      "category": "AMBIGUOUS",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 1.86,
+          "returnedChunkIds": [
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.38,
+          "returnedChunkIds": [
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "78ea6b05-6ea3-4842-b46a-c8dfd0ed2cd3",
+            "e023aa1c-6c24-4d69-8227-49864941ed70",
+            "dce409ed-f04e-4445-a78a-0c5be52e8d9c",
+            "b376229a-96a3-49d8-844e-48becd5c8569",
+            "e83e0109-d598-46b1-bf53-e18b0ce3a532",
+            "ba3c4b62-0a3a-4e76-bee5-77116c3df036",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 1.72,
+          "returnedChunkIds": [
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "d0cfdc38-f214-4714-b1bd-bb351592bf1e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "78ea6b05-6ea3-4842-b46a-c8dfd0ed2cd3",
+            "e023aa1c-6c24-4d69-8227-49864941ed70",
+            "dce409ed-f04e-4445-a78a-0c5be52e8d9c",
+            "b376229a-96a3-49d8-844e-48becd5c8569",
+            "e83e0109-d598-46b1-bf53-e18b0ce3a532",
+            "ba3c4b62-0a3a-4e76-bee5-77116c3df036"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q028",
+      "query": "rules",
+      "category": "AMBIGUOUS",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.5997,
+          "latencyMs": 1.04,
+          "returnedChunkIds": [
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "b619839e-6512-4942-ab6a-7106908827ef",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 0.1429,
+          "ndcgAt10": 0.2624,
+          "latencyMs": 1.71,
+          "returnedChunkIds": [
+            "e023aa1c-6c24-4d69-8227-49864941ed70",
+            "10c0f917-5152-4134-8d60-68c81c616583",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "dd4b0990-735a-48d5-9895-ddf2e0e2e053",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6419,
+          "latencyMs": 0.57,
+          "returnedChunkIds": [
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "b619839e-6512-4942-ab6a-7106908827ef",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "e023aa1c-6c24-4d69-8227-49864941ed70",
+            "10c0f917-5152-4134-8d60-68c81c616583",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q029",
+      "query": "\"finite sequence of rigorous instructions\"",
+      "category": "EXACT_PHRASE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 48.08,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.53,
+          "returnedChunkIds": [
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "5de7fd9c-a6a6-4917-8b9e-ad5a179279ad",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "3498b627-da95-46fe-9a88-91c555b582b1",
+            "0f824193-ec6e-4639-bb87-6f22c545264a"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.44,
+          "returnedChunkIds": [
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "5de7fd9c-a6a6-4917-8b9e-ad5a179279ad",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "3498b627-da95-46fe-9a88-91c555b582b1",
+            "0f824193-ec6e-4639-bb87-6f22c545264a"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q030",
+      "query": "\"Context Gateway\"",
+      "category": "EXACT_PHRASE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 0.5,
+          "mrr": 0.5,
+          "ndcgAt10": 0.3869,
+          "latencyMs": 1.69,
+          "returnedChunkIds": [
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "b1246d80-099c-4076-b411-e5eab0654ec4"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 1.36,
+          "returnedChunkIds": [
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6509,
+          "latencyMs": 0.45,
+          "returnedChunkIds": [
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "a0c42162-cdd8-4b6b-aaae-3ecd63d887b4",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q031",
+      "query": "\"Documentation/process/changes.rst\"",
+      "category": "EXACT_PHRASE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.38,
+          "returnedChunkIds": [
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.51,
+          "returnedChunkIds": [
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 1.68,
+          "returnedChunkIds": [
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q032",
+      "query": "\"Book of Indian computation\"",
+      "category": "EXACT_PHRASE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 1.84,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "94d26395-1e23-40d1-8c1e-f3089614c396"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 1.8,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "94d26395-1e23-40d1-8c1e-f3089614c396"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.45,
+          "returnedChunkIds": [
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "94d26395-1e23-40d1-8c1e-f3089614c396",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016",
+            "c54432fe-76b1-4cd1-9534-57a53781e815"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q033",
+      "query": "\"Agent Mesh\"",
+      "category": "EXACT_PHRASE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9197,
+          "latencyMs": 1.46,
+          "returnedChunkIds": [
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "b1246d80-099c-4076-b411-e5eab0654ec4"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.8066,
+          "latencyMs": 0.49,
+          "returnedChunkIds": [
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.8772,
+          "latencyMs": 0.58,
+          "returnedChunkIds": [
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q034",
+      "query": "\"Jacquard loom\"",
+      "category": "EXACT_PHRASE",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.34,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.4,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "dd4b0990-735a-48d5-9895-ddf2e0e2e053"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.56,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "4386fd25-fd6a-4a7f-8404-4333be903ea3",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "01a6fb7f-c897-4eef-bcc8-d17672889429",
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "dd4b0990-735a-48d5-9895-ddf2e0e2e053"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q035",
+      "query": "guidelines and documentation files for academic researchers exploring Linux kernel internals",
+      "category": "LONG_TAIL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 49.82,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.5,
+          "returnedChunkIds": [
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.45,
+          "returnedChunkIds": [
+            "d90f8c8a-7820-4c45-ad07-0aca255a83cb",
+            "6e49de8c-c9af-4408-8d05-7ac427b35c80",
+            "9c2e28f9-99ce-4bc6-a068-1667512770c3",
+            "9804cd9e-23ac-48a2-998b-4765ad79f5da",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994",
+            "27e4a493-9d05-4c2f-9360-57ff4288819e",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "a045276f-d0b3-4808-9a0b-52c3a77f6dc1",
+            "adcc16ce-75ca-4a2e-b042-ed6cd7c6603e"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q036",
+      "query": "ancient clay tablets and division arithmetic algorithms before mechanical calculation",
+      "category": "LONG_TAIL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.9173,
+          "latencyMs": 1.7,
+          "returnedChunkIds": [
+            "a089af33-4d90-44b4-86d9-35fedfdb844f"
+          ]
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.968,
+          "latencyMs": 1.75,
+          "returnedChunkIds": [
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.1,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 0.968,
+          "latencyMs": 0.37,
+          "returnedChunkIds": [
+            "a089af33-4d90-44b4-86d9-35fedfdb844f",
+            "ba9976e8-8ae0-4d62-ab1f-4fc06d5192cd",
+            "c54432fe-76b1-4cd1-9534-57a53781e815",
+            "b4be2590-ce8d-4d0c-abe8-fe4c096df75e",
+            "bfbb5d1b-37e2-4e70-930a-c0cec35bea24",
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "7eee285f-66e9-4655-8007-a0ccdb0219ab",
+            "0545170e-7332-4426-a91b-664daeb9e52f",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "474b16e1-5010-4878-9dd9-31bbdfee9016"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q037",
+      "query": "persisting agent conversations and routing streams through dropped network connections with Agent Mesh",
+      "category": "LONG_TAIL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 54.73,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6053,
+          "latencyMs": 0.4,
+          "returnedChunkIds": [
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6053,
+          "latencyMs": 0.44,
+          "returnedChunkIds": [
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "1be2beb3-64d9-4f62-91dd-89775d155623"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q038",
+      "query": "blocking command line git pushes that expose private personal email address",
+      "category": "LONG_TAIL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 56.85,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.41,
+          "returnedChunkIds": [
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+            "0cd66fd4-7598-425b-a599-f4c19dc692cb",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "cd9490d4-e0e0-4683-98ab-7bd0675aa311",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 1,
+          "ndcgAt10": 1,
+          "latencyMs": 0.83,
+          "returnedChunkIds": [
+            "95245329-c0c7-42d9-9dad-cb38ca8b84f4",
+            "0cd66fd4-7598-425b-a599-f4c19dc692cb",
+            "b55a44d5-ce99-4349-b632-84bceb8e01c1",
+            "ec9bd0ed-d34a-4217-bc8a-495d808191f4",
+            "ab207760-c0de-4ca3-b547-9a015b05bc74",
+            "cd9490d4-e0e0-4683-98ab-7bd0675aa311",
+            "ff26cab5-5fdf-402e-bb34-6eae942b2194",
+            "ca961112-ee01-4428-af2b-1a31d8798d02",
+            "41b3771f-4647-4bd5-8c93-e6ea1a02a940",
+            "f787bedb-a370-4bdf-9a57-e4d992fe9994"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q039",
+      "query": "formal equivalence between lambda calculus Turing machines and general recursive functions",
+      "category": "LONG_TAIL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 48.07,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.5241,
+          "latencyMs": 1.65,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "cdbdda0e-3654-4a5b-b766-ad2612d52223",
+            "7c770107-e006-4fc5-8e1a-b57745fe3d45",
+            "3498b627-da95-46fe-9a88-91c555b582b1",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.3333,
+          "ndcgAt10": 0.5241,
+          "latencyMs": 1.23,
+          "returnedChunkIds": [
+            "e5ac9713-5ddb-4eac-b953-ff1488711510",
+            "0f824193-ec6e-4639-bb87-6f22c545264a",
+            "0aadad74-10bd-41a5-903d-64b93d79fe18",
+            "b9cb4647-3831-4377-872a-5bbf2886cd8e",
+            "a5d940be-1e53-4d36-8f07-740d13485096",
+            "cdbdda0e-3654-4a5b-b766-ad2612d52223",
+            "7c770107-e006-4fc5-8e1a-b57745fe3d45",
+            "3498b627-da95-46fe-9a88-91c555b582b1",
+            "d4a1a437-45a8-4869-b140-7736ea46a79c",
+            "929314e7-23ed-4794-a066-1cfea51fd6c0"
+          ]
+        }
+      }
+    },
+    {
+      "queryId": "Q040",
+      "query": "turn agent behavior into an explainable queryable record of decisions with Lens in Redis Iris",
+      "category": "LONG_TAIL",
+      "results": {
+        "KEYWORD": {
+          "precisionAt10": 0,
+          "recallAt10": 0,
+          "mrr": 0,
+          "ndcgAt10": 0,
+          "latencyMs": 56.16,
+          "returnedChunkIds": []
+        },
+        "SEMANTIC": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6934,
+          "latencyMs": 0.44,
+          "returnedChunkIds": [
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb"
+          ]
+        },
+        "HYBRID": {
+          "precisionAt10": 0.2,
+          "recallAt10": 1,
+          "mrr": 0.5,
+          "ndcgAt10": 0.6934,
+          "latencyMs": 0.36,
+          "returnedChunkIds": [
+            "465eb1de-319d-467c-84e6-512aacc5fad5",
+            "a24b4de2-9f38-488a-8f7a-da26e0bf4556",
+            "2501fd81-3b18-4e04-bffa-b89f806436b1",
+            "cc5b2b6a-a844-4780-9317-bd0ab166171e",
+            "b1246d80-099c-4076-b411-e5eab0654ec4",
+            "1210b3bc-fd09-4d70-a6bf-231263da3a8c",
+            "79d94195-15e7-4a35-92a1-bd3f34bda61f",
+            "68b91d4c-c779-4eea-8638-c488b7c6e701",
+            "22634f18-b20a-4078-9897-17eca06cf5e6",
+            "1114c7ac-c05e-4ec8-b776-bee97a7acccb"
+          ]
+        }
+      }
+    }
+  ],
+  "comparativeAnalysis": {
+    "bestOverallMode": "SEMANTIC",
+    "bestModeByCategory": {
+      "EXACT_KEYWORD": "SEMANTIC",
+      "CONCEPTUAL": "SEMANTIC",
+      "NATURAL_LANGUAGE": "SEMANTIC",
+      "AMBIGUOUS": "HYBRID",
+      "EXACT_PHRASE": "SEMANTIC",
+      "LONG_TAIL": "SEMANTIC"
+    },
+    "hybridWins": [
+      {
+        "queryId": "Q028",
+        "query": "rules",
+        "reason": "Hybrid nDCG (0.6419) outperformed Keyword (0.5997) and Semantic (0.2624)"
+      }
+    ],
+    "hybridLosses": [
+      {
+        "queryId": "Q001",
+        "query": "Linux kernel source tree",
+        "reason": "Hybrid nDCG (0.5077) lagged best single mode (0.6764)"
+      },
+      {
+        "queryId": "Q003",
+        "query": "Turing machine programs",
+        "reason": "Hybrid nDCG (0.6075) lagged best single mode (0.7453)"
+      },
+      {
+        "queryId": "Q030",
+        "query": "\"Context Gateway\"",
+        "reason": "Hybrid nDCG (0.6509) lagged best single mode (1)"
+      }
+    ],
+    "keywordWins": [
+      {
+        "queryId": "Q003",
+        "query": "Turing machine programs",
+        "reason": "Keyword nDCG (0.7453) exceeded Semantic (0.6122) and Hybrid (0.6075)"
+      },
+      {
+        "queryId": "Q033",
+        "query": "\"Agent Mesh\"",
+        "reason": "Keyword nDCG (0.9197) exceeded Semantic (0.8066) and Hybrid (0.8772)"
+      }
+    ],
+    "semanticWins": [
+      {
+        "queryId": "Q001",
+        "query": "Linux kernel source tree",
+        "reason": "Semantic nDCG (0.6764) exceeded Keyword (0.5241) and Hybrid (0.5077)"
+      },
+      {
+        "queryId": "Q002",
+        "query": "al-Khwarizmi",
+        "reason": "Semantic nDCG (0.9164) exceeded Keyword (0.7453) and Hybrid (0.9024)"
+      },
+      {
+        "queryId": "Q006",
+        "query": "Agent Playbooks",
+        "reason": "Semantic nDCG (0.9843) exceeded Keyword (0.8944) and Hybrid (0.9794)"
+      },
+      {
+        "queryId": "Q025",
+        "query": "memory",
+        "reason": "Semantic nDCG (0.7753) exceeded Keyword (0.3903) and Hybrid (0.7516)"
+      },
+      {
+        "queryId": "Q026",
+        "query": "routing",
+        "reason": "Semantic nDCG (0.8839) exceeded Keyword (0.7226) and Hybrid (0.8129)"
+      },
+      {
+        "queryId": "Q030",
+        "query": "\"Context Gateway\"",
+        "reason": "Semantic nDCG (1) exceeded Keyword (0.3869) and Hybrid (0.6509)"
+      }
+    ],
+    "zeroRecallQueries": [],
+    "qualityVsLatencySummary": "HYBRID delivers the most consistent ranking quality across categories (nDCG@10: 0.8386, MRR: 0.8236) at P50 latency of 0.57ms. KEYWORD provides ultra-low latency (47.89ms) and excels on verbatim exact phrasing, but suffers on natural language queries. SEMANTIC retrieves conceptually related chunks (P50: 0.54ms) but can lose precision on exact technical identifiers. HYBRID balances both with reciprocal rank fusion."
+  }
+}

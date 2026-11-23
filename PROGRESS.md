@@ -185,12 +185,25 @@ Tracking implementation status across development milestones.
 ### Phase 6: Optimization & Observability
 - [x] **Milestone 6.1: Multi-Tier Redis & pgvector Semantic Caching**:
   - [x] Level 1: Redis exact-match cache for search results and research payloads (`seekr:cache:exact:...`) with TTL.
-  - [x] Level 2: PostgreSQL `semantic_cache` table with pgvector HNSW cosine distance index matching semantically similar queries ($\ge 0.95$ for search, $\ge 0.96$ for research).
+  - [x] Level 2: PostgreSQL `semantic_cache` table with pgvector HNSW cosine distance index matching semantically similar queries ($\ge 0.88$ for search, $\ge 0.90$ for research).
   - [x] Level 3: `CachedEmbeddingProvider` caching dense 768-dim vectors in Redis (`seekr:cache:emb:...`) with 7-day TTL, completely eliminating rate limit errors on repeated queries.
   - [x] Cache management REST endpoints (`GET /api/v1/cache/stats`, `POST /api/v1/cache/clear`, `POST /api/v1/cache/cleanup`).
   - [x] `skipCache` parameter and `Cache-Control: no-cache` header support across Search & Research APIs.
   - [x] Automated test suites: `redis-cache.test.ts` (6 tests), `semantic-cache.test.ts` (6 tests), `cache.api.test.ts` (6 tests). Total new tests: 18.
-- [ ] Milestone 6.2: API rate limiting & quota management (Redis sliding-window).
+- [x] **Milestone 6.2: API Rate Limiting & Quota Management**:
+  - [x] Atomic distributed sliding-window rate limiting backed by Redis Sorted Sets (`ZSET`) and Lua scripting.
+  - [x] Tiered endpoint quotas:
+    - Search (`/api/v1/search`): 60 req/min (anonymous IP), 180 req/min (authenticated).
+    - Research (`/api/v1/research`, `/stream`): 10 req/min (anonymous IP), 30 req/min (authenticated).
+    - Suggestions (`/api/v1/search/suggestions`): 120 req/min (anonymous IP), 300 req/min (authenticated).
+    - Global API fallback (`/api/v1/*`): 120 req/min (anonymous IP), 300 req/min (authenticated).
+    - Health checks (`/health`, `/ready`): Exempt from rate limiting.
+  - [x] Multi-tier client identification: authenticated `req.user.userId`, SHA-256 hashed API key, SHA-256 hashed Bearer token, or IP address (`x-forwarded-for`, `req.ip`).
+  - [x] Standard RFC compliance: `RateLimit-Limit`, `RateLimit-Remaining`, `RateLimit-Reset`, and `Retry-After` headers.
+  - [x] HTTP 429 `TooManyRequestsError` with unified `ApiResponse` JSON error envelope.
+  - [x] Resilient fail-open strategy on transient Redis errors.
+  - [x] Automated test suites: `rateLimiter.test.ts` (5 tests), `rateLimiter.api.test.ts` (6 tests). Total project tests: 249 passing across 36 suites.
+  - [x] Recorded ADR 020 in `TECHNICAL_DECISIONS.md`.
 - [ ] Milestone 6.3: Observability metrics & telemetry.
 
 ---

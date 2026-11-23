@@ -1,4 +1,5 @@
 import { SearchResultItem } from '@seekr/types';
+import { config } from '../../config/index.js';
 import {
   AssembledContext,
   AssembledSource,
@@ -13,10 +14,10 @@ import {
 } from './injection-guard.js';
 
 export const DEFAULT_ASSEMBLER_OPTIONS: Required<ContextAssemblerOptions> = {
-  maxContextTokens: 4096,
-  reservedResponseTokens: 1024,
+  maxContextTokens: config?.RESEARCH_MAX_CONTEXT_TOKENS ?? 4096,
+  reservedResponseTokens: config?.RESEARCH_RESERVED_RESPONSE_TOKENS ?? 1024,
   safetyMarginTokens: 100,
-  maxSources: 8,
+  maxSources: config?.RESEARCH_MAX_SOURCES ?? 8,
   minRelevanceScore: 0.001,
   maxChunkTokens: 600,
 };

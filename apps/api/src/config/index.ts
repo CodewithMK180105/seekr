@@ -34,6 +34,28 @@ const envSchema = z.object({
 
   GEMINI_API_KEY: z.string().optional().default(''),
   OPENAI_API_KEY: z.string().optional().default(''),
+
+  // Rate Limiting Quotas (Requests per minute)
+  RATE_LIMIT_DISABLED: z.enum(['true', 'false']).default('false'),
+  RATE_LIMIT_SEARCH_ANON: z.coerce.number().default(60),
+  RATE_LIMIT_SEARCH_AUTH: z.coerce.number().default(180),
+  RATE_LIMIT_RESEARCH_ANON: z.coerce.number().default(10),
+  RATE_LIMIT_RESEARCH_AUTH: z.coerce.number().default(30),
+  RATE_LIMIT_SUGGESTIONS_ANON: z.coerce.number().default(120),
+  RATE_LIMIT_SUGGESTIONS_AUTH: z.coerce.number().default(300),
+  RATE_LIMIT_GLOBAL_ANON: z.coerce.number().default(120),
+  RATE_LIMIT_GLOBAL_AUTH: z.coerce.number().default(300),
+
+  // Caching & Thresholds
+  SEMANTIC_CACHE_SEARCH_THRESHOLD: z.coerce.number().default(0.88),
+  SEMANTIC_CACHE_RESEARCH_THRESHOLD: z.coerce.number().default(0.90),
+  CACHE_SEARCH_TTL_SECONDS: z.coerce.number().default(900),
+  CACHE_RESEARCH_TTL_SECONDS: z.coerce.number().default(3600),
+
+  // Research Token Budgeting
+  RESEARCH_MAX_CONTEXT_TOKENS: z.coerce.number().default(4096),
+  RESEARCH_RESERVED_RESPONSE_TOKENS: z.coerce.number().default(1024),
+  RESEARCH_MAX_SOURCES: z.coerce.number().default(8),
 });
 
 const parsed = envSchema.safeParse(process.env);

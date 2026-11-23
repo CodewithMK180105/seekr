@@ -267,3 +267,47 @@ This document records the architectural and technical decisions made during the 
   - Over 95% latency reduction on semantically equivalent queries.
   - Complete elimination of rate limit quota exhaustion for repeated query embeddings.
   - Safe, deterministic cache invalidation and TTL expiration.
+
+---
+
+## ADR 020: Distributed Atomic Sliding-Window Rate Limiting with Redis & Tiered Endpoint Quotas
+- **Status**: Accepted
+- **Context**: As a multi-tenant search and research API, Seekr requires protection against accidental exhaustion, denial of service (DoS), LLM token drain, and scraping. Traditional fixed-window algorithms (e.g. counting requests per wall-clock minute) suffer from the "boundary burst" flaw where a client can send $2\times$ the rate limit across the minute boundary (e.g., limit at :59s and limit at :01s).
+- **Decision**:
+  1. **Sliding-Window Log via Redis Sorted Sets (`ZSET`) and Lua Scripting**:
+     - Uses Redis Sorted Sets where scores and values represent high-precision timestamps and unique nonces (`<timestamp>:<nonce>`).
+     - Executes an atomic Lua script in a single network round-trip:
+       ```lua
+       local clearBefore = now - windowMs
+       redis.call('ZREMRANGEBYSCORE', key, 0, clearBefore)
+       local currentRequests = redis.call('ZCARD', key)
+       if currentRequests < maxRequests then
+           redis.call('ZADD', key, now, nonce)
+           redis.call('EXPIRE', key, math.ceil(windowMs / 1000) + 2)
+           return { 1, maxRequests - currentRequests - 1, math.ceil((now + windowMs) / 1000), 0 }
+       else
+           local oldest = redis.call('ZRANGE', key, 0, 0, 'WITHSCORES')
+           local oldestScore = tonumber(oldest[2])
+           local retryAfter = math.ceil((oldestScore + windowMs - now) / 1000)
+           return { 0, 0, math.ceil((oldestScore + windowMs) / 1000), retryAfter }
+       end
+       ```
+     - Eliminates race conditions across distributed API instances with zero locks.
+  2. **Tiered Endpoint Quotas**:
+     - *Search (`/api/v1/search`)*: 60 req/min (Anonymous IP), 180 req/min (Authenticated API Key / JWT).
+     - *Research (`/api/v1/research`, `/stream`)*: 10 req/min (Anonymous IP), 30 req/min (Authenticated). Strictly protects LLM generation budget.
+     - *Suggestions (`/api/v1/search/suggestions`)*: 120 req/min (Anonymous IP), 300 req/min (Authenticated) to accommodate UI keystroke autocomplete.
+     - *Global Fallback (`/api/v1/*`)*: 120 req/min (Anonymous IP), 300 req/min (Authenticated) for metadata, sources, crawl-jobs, and cache endpoints.
+     - *Health Checks (`/health`, `/ready`)*: Completely exempt from rate limiting for Kubernetes liveness/readiness probes.
+  3. **Client Identification Hierarchy**:
+     - Authenticated: `req.user.userId` > SHA-256 hashed `x-api-key` > SHA-256 hashed Bearer token.
+     - Anonymous: Client IP extracted from `x-forwarded-for` > `req.ip` > `req.socket.remoteAddress`.
+  4. **RFC Compliant Headers & Error Handling**:
+     - Every request attaches `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` Unix epoch timestamp.
+     - Upon quota exhaustion, sets `Retry-After: <seconds>` and throws `TooManyRequestsError` (HTTP 429), returning Seekr's standard `ApiResponse` JSON envelope (`code: 'TOO_MANY_REQUESTS'`).
+  5. **Resilient Fail-Open Strategy**:
+     - If Redis encounters a transient network partition or timeout, the rate limiter fails open (`allowed: true`) and logs a warning, preventing API paralysis for paying users.
+- **Consequences**:
+  - Completely prevents boundary burst attacks with true sliding-window accuracy.
+  - Enforces strict cost controls on expensive LLM generation routes without choking keystroke autocomplete.
+  - Zero external npm package bloat; fully verified by automated unit and integration tests.

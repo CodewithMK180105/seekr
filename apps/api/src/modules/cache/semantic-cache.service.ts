@@ -1,5 +1,6 @@
 import { prisma, RedisCacheService, getEmbeddingProvider } from '@seekr/shared';
 import { CacheType, SemanticCacheMatch, CacheStats } from '@seekr/types';
+import { config } from '../../config/index.js';
 
 export interface FindCacheParams {
   cacheType: CacheType;
@@ -21,12 +22,10 @@ export interface StoreCacheParams<T = unknown> {
 
 export class SemanticCacheService {
   private redisCache: RedisCacheService;
-  public readonly defaultSearchThreshold: number =
-    Number(process.env.SEMANTIC_CACHE_SEARCH_THRESHOLD) || 0.88;
-  public readonly defaultResearchThreshold: number =
-    Number(process.env.SEMANTIC_CACHE_RESEARCH_THRESHOLD) || 0.90;
-  public readonly defaultSearchTtl: number = 900; // 15 minutes
-  public readonly defaultResearchTtl: number = 3600; // 1 hour
+  public readonly defaultSearchThreshold: number = config.SEMANTIC_CACHE_SEARCH_THRESHOLD;
+  public readonly defaultResearchThreshold: number = config.SEMANTIC_CACHE_RESEARCH_THRESHOLD;
+  public readonly defaultSearchTtl: number = config.CACHE_SEARCH_TTL_SECONDS;
+  public readonly defaultResearchTtl: number = config.CACHE_RESEARCH_TTL_SECONDS;
 
   constructor(redisCache: RedisCacheService = new RedisCacheService()) {
     this.redisCache = redisCache;

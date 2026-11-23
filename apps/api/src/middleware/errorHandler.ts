@@ -13,12 +13,16 @@ export function errorHandler(
 
   // Handle known operational AppError
   if (err instanceof AppError) {
+    if ('retryAfter' in err && typeof (err as any).retryAfter === 'number') {
+      res.setHeader('Retry-After', String((err as any).retryAfter));
+    }
     const response: ApiResponse = {
       success: false,
       error: {
         code: err.code,
         message: err.message,
         details: err.details,
+        ...('retryAfter' in err ? { retryAfter: (err as any).retryAfter } : {}),
       },
       meta: { requestId },
     };
