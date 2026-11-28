@@ -238,6 +238,30 @@ Tracking implementation status across development milestones.
 ---
 
 ### Phase 7: Frontend & Deployment
-- [ ] Next.js search UI with Tailwind CSS and shadcn/ui.
-- [ ] Streaming RAG response rendering with citations.
-- [ ] Production Docker compose and deployment documentation.
+- [x] **Milestone 7.1: Next.js 14 Hybrid Search UI & Glassmorphism Experience**:
+  - [x] Premium-grade glassmorphic UI architecture with Tailwind CSS, custom backdrop blur, ambient radial glowing spheres, and dot-matrix patterns.
+  - [x] Full Light and Dark mode theming (`ThemeProvider.tsx`, `ThemeToggle.tsx`) compliant with `modern-web-guidance`:
+    - [x] Zero-FOUC inline theme execution in `<head>`.
+    - [x] `<meta name="color-scheme" content="light dark">` with dynamic synchronization.
+    - [x] Cross-tab storage synchronization and `prefers-color-scheme` OS listener.
+  - [x] Omnibox search component (`SearchBox.tsx`):
+    - [x] Real-time debounced prefix autocomplete dropdown (`GET /api/v1/search/suggestions`).
+    - [x] Full keyboard navigation: `ArrowUp`, `ArrowDown`, `Enter`, `Escape`, and `Cmd+K`/`Ctrl+K` omnibox focus shortcut.
+    - [x] Retrieval mode selector (`HYBRID`, `SEMANTIC`, `KEYWORD`) with visual recommendation tags.
+    - [x] Popular query quick-search chips.
+  - [x] Rich search results presentation (`SearchResults.tsx`):
+    - [x] Latency counter, result volume, and cache telemetry tags (Exact Cache Hit vs Semantic Cache Hit with similarity %).
+    - [x] Interactive glass cards with title links, breadcrumbs, and source type tags (`DOCUMENTATION`, `WEB`, `API_REFERENCE`).
+    - [x] RRF score badges and component retriever rank breakdowns (`FTS #rank` and `Vector #rank`).
+    - [x] Asynchronous non-blocking click tracking (`POST /api/v1/search/feedback`) for search CTR analytics.
+  - [x] Search analytics modal (`SearchAnalyticsModal.tsx`):
+    - [x] Live aggregate telemetry dashboard querying `GET /api/v1/search/analytics`.
+    - [x] Total queries, average latency, P50/P95 latencies, Search CTR, Result CTR, mode distribution percentages, top queries, and top clicked documents.
+  - [x] Verified full monorepo build with exit code 0 (`next build` static export passing).
+- [ ] **Milestone 7.2: Streaming RAG Research Experience & Citation Cards**:
+  - [ ] Real-time SSE streaming consumption (`POST /api/v1/research/stream`).
+  - [ ] Markdown streaming response view with token animation.
+  - [ ] Interactive citation popovers (`[1]`, `[2]`) displaying verified supporting excerpts from PostgreSQL.
+- [ ] **Milestone 7.3: Production Dockerization & Deployment**:
+  - [ ] Multi-stage Dockerfiles (`api`, `worker`, `web`).
+  - [ ] Unified `docker-compose.prod.yml` and `DEPLOYMENT.md`.

@@ -1,20 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 243, 244, 246;
-  --background-start-rgb: 9, 13, 22;
-  --background-end-rgb: 15, 23, 42;
+@layer base {
+  :root {
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Google Sans Text', 'Google Sans', Helvetica, Arial, sans-serif;
+    color-scheme: light dark;
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card: rgba(255, 255, 255, 0.75);
+    --card-foreground: #0f172a;
+    --border: rgba(226, 232, 240, 0.8);
+    --border-glass: rgba(255, 255, 255, 0.6);
+    --input: rgba(255, 255, 255, 0.85);
+    --ring: rgba(59, 130, 246, 0.4);
+
+    --color-scrollbar-track: #f1f5f9;
+    --color-scrollbar-thumb: #cbd5e1;
+    scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+    scrollbar-width: thin;
+  }
+
+  html, body, button, input, textarea, select {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Google Sans Text', 'Google Sans', Helvetica, Arial, sans-serif !important;
+    letter-spacing: -0.015em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :root:has(> head > meta[name="color-scheme"][content="dark"]),
+  html.dark {
+    color-scheme: dark;
+    --background: #060913;
+    --foreground: #f8fafc;
+    --card: rgba(15, 23, 42, 0.65);
+    --card-foreground: #f8fafc;
+    --border: rgba(30, 41, 59, 0.8);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --input: rgba(15, 23, 42, 0.7);
+    --ring: rgba(96, 165, 250, 0.4);
+
+    --color-scrollbar-track: #0b101e;
+    --color-scrollbar-thumb: #334155;
+    scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+  }
+
+  :root:has(> head > meta[name="color-scheme"][content="light"]),
+  html.light {
+    color-scheme: light;
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card: rgba(255, 255, 255, 0.7);
+    --card-foreground: #0f172a;
+    --border: rgba(226, 232, 240, 0.8);
+    --border-glass: rgba(255, 255, 255, 0.6);
+    --input: rgba(255, 255, 255, 0.8);
+    --ring: rgba(59, 130, 246, 0.4);
+
+    --color-scrollbar-track: #f1f5f9;
+    --color-scrollbar-thumb: #cbd5e1;
+    scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  min-height: 100vh;
+@layer components {
+  /* Glassmorphism Surface Base */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .dark .glass-panel {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* Interactive Glass Surface with Hover Glow */
+  .glass-panel-interactive {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-panel-interactive:hover {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 14px 40px 0 rgba(31, 38, 135, 0.1), 0 0 20px -3px rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .dark .glass-panel-interactive {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark .glass-panel-interactive:hover {
+    background: rgba(22, 33, 62, 0.75);
+    border-color: rgba(96, 165, 250, 0.3);
+    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 0 25px -4px rgba(59, 130, 246, 0.25);
+    transform: translateY(-1px);
+  }
+
+  /* Glass Input Container */
+  .glass-input {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .dark .glass-input {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  /* Ambient Glass Gradient Text */
+  .glass-text-shimmer {
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .dark .glass-text-shimmer {
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }

@@ -23,6 +23,7 @@ export interface SearchPagination {
   limit: number;
   offset: number;
   total: number;
+  totalPages?: number;
   hasMore: boolean;
 }
 
@@ -30,6 +31,9 @@ export interface SearchResponse {
   searchId?: string;
   searchQueryId?: string;
   query: string;
+  originalQuery?: string;
+  queryCategory?: string;
+  sufficiencyAction?: string;
   mode: SearchMode;
   results: SearchResultItem[];
   pagination: SearchPagination;
@@ -39,6 +43,8 @@ export interface SearchResponse {
   cached?: boolean;
   cacheType?: 'EXACT' | 'SEMANTIC';
   cacheSimilarity?: number;
+  dynamicallyCrawled?: boolean;
+  isProgressive?: boolean;
 }
 
 export interface SuggestionsResponse {

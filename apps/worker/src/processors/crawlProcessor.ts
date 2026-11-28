@@ -12,6 +12,87 @@ import { robotsService } from '../services/robotsService.js';
 import { extractContent } from '../services/contentExtractor.js';
 import { normalizeTextAndHash } from '../services/normalizer.js';
 
+interface QueueItem {
+  url: string;
+  depth: number;
+  priority: number;
+}
+
+const DOC_PATH_PATTERNS = [
+  /\/docs(\/|$)/i,
+  /\/documentation(\/|$)/i,
+  /\/guide(s)?(\/|$)/i,
+  /\/reference(\/|$)/i,
+  /\/manual(s)?(\/|$)/i,
+  /\/tutorial(s)?(\/|$)/i,
+  /\/api(\/|$)/i,
+  /\/concepts(\/|$)/i,
+  /\/how-to(\/|$)/i,
+  /\/learn(\/|$)/i,
+  /\/overview(\/|$)/i,
+  /\/topics(\/|$)/i,
+];
+
+const LOW_VALUE_PATTERNS = [
+  /\/blog(\/|$)/i,
+  /\/news(\/|$)/i,
+  /\/press(\/|$)/i,
+  /\/events(\/|$)/i,
+  /\/webinars(\/|$)/i,
+  /\/pricing(\/|$)/i,
+  /\/careers(\/|$)/i,
+  /\/jobs(\/|$)/i,
+  /\/legal(\/|$)/i,
+  /\/privacy(\/|$)/i,
+  /\/terms(\/|$)/i,
+  /\/cookie(\/|$)/i,
+  /\/login(\/|$)/i,
+  /\/signup(\/|$)/i,
+  /\/cart(\/|$)/i,
+  /\/checkout(\/|$)/i,
+  /\/contact(\/|$)/i,
+];
+
+/**
+ * Calculates a crawl priority score for candidate URLs to prioritize
+ * technical documentation over marketing, blogs, and administrative pages.
+ */
+export function calculateUrlPriority(urlStr: string, rootBaseUrl: string): number {
+  let score = 0;
+  try {
+    const parsed = new URL(urlStr);
+    const path = parsed.pathname;
+
+    // 1. Documentation path bonus (+25)
+    if (DOC_PATH_PATTERNS.some((pattern) => pattern.test(path))) {
+      score += 25;
+    }
+
+    // 2. Base URL subpath alignment (+20)
+    // If the crawl was started from a specific doc path, prioritize links in that subtree
+    const rootPath = new URL(rootBaseUrl).pathname;
+    if (rootPath !== '/' && path.startsWith(rootPath)) {
+      score += 20;
+    }
+
+    // 3. Technical keywords in path (+10)
+    if (
+      /(persistence|snapshot|index|b-tree|queue|retry|network|bridge|deploy|pod|cluster|daemon|operate|management|storage)/i.test(
+        path
+      )
+    ) {
+      score += 10;
+    }
+
+    // 4. Low-value marketing / admin penalty (-30)
+    if (LOW_VALUE_PATTERNS.some((pattern) => pattern.test(path))) {
+      score -= 30;
+    }
+  } catch {}
+
+  return score;
+}
+
 export async function processCrawlJob(job: Job<CrawlJobData>): Promise<void> {
   const jobStartTime = performance.now();
   const { crawlJobId, sourceId, baseUrl, maxPages = 10, maxDepth = 2 } = job.data;
@@ -29,7 +110,7 @@ export async function processCrawlJob(job: Job<CrawlJobData>): Promise<void> {
   });
 
   const visited = new Set<string>();
-  const queue: Array<{ url: string; depth: number }> = [{ url: baseUrl, depth: 0 }];
+  const queue: QueueItem[] = [{ url: baseUrl, depth: 0, priority: 100 }];
 
   let pagesProcessed = 0;
   let pagesFailed = 0;
@@ -79,7 +160,11 @@ export async function processCrawlJob(job: Job<CrawlJobData>): Promise<void> {
         }
 
         // 4. Content Extraction & Text Normalization
-        const { title, content, links } = extractContent(response.data, safeUrl);
+        const { title, content, links, canonicalUrl } = extractContent(response.data, safeUrl);
+        if (canonicalUrl && canonicalUrl !== safeUrl) {
+          visited.add(canonicalUrl);
+        }
+
         const { normalizedText, contentHash } = normalizeTextAndHash(content);
 
         // Skip pages with trivial content
@@ -148,13 +233,16 @@ export async function processCrawlJob(job: Job<CrawlJobData>): Promise<void> {
           data: { pagesProcessed, pagesFailed },
         });
 
-        // 6. Discover and enqueue internal links within depth limit
+        // 6. Discover and enqueue internal links within depth limit using priority queue
         if (depth < maxDepth && pagesProcessed < maxPages) {
           for (const link of links) {
             if (!visited.has(link) && queue.every((q) => q.url !== link)) {
-              queue.push({ url: link, depth: depth + 1 });
+              const priority = calculateUrlPriority(link, baseUrl);
+              queue.push({ url: link, depth: depth + 1, priority });
             }
           }
+          // Prioritize documentation URLs (higher priority first, shallower depth first)
+          queue.sort((a, b) => b.priority - a.priority || a.depth - b.depth);
         }
       } catch (pageErr: any) {
         pagesFailed++;

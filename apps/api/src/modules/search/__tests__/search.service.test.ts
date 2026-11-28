@@ -42,12 +42,16 @@ describe('SearchService Unit Tests', () => {
       findMatch: vi.fn().mockResolvedValue({ matched: false }),
       store: vi.fn().mockResolvedValue(undefined),
     } as any;
+    const mockCrawler = {
+      crawlForQuery: vi.fn().mockResolvedValue([]),
+    } as any;
     searchService = new SearchService(
       mockKeywordRetriever,
       mockVectorRetriever,
       rrfService,
       mockLogging,
-      mockCache
+      mockCache,
+      mockCrawler
     );
   });
 
@@ -127,7 +131,7 @@ describe('SearchService Unit Tests', () => {
     expect(res.results[0].matchedBy).toEqual({ keyword: true, vector: true });
     expect(res.results[0].keywordRank).toBe(1);
     expect(res.results[0].vectorRank).toBe(2);
-    expect(res.results[0].score).toBeCloseTo(1 / 61 + 1 / 62, 6);
+    expect(res.results[0].score).toBeCloseTo(1 / 61 + 1 / 62 + 0.08, 6);
   });
 
   it('5. returns empty results immediately for blank queries without invoking retrievers', async () => {
@@ -240,6 +244,38 @@ describe('SearchService Unit Tests', () => {
 
     expect(mockKeywordRetriever.search).toHaveBeenCalledWith('scoped', expect.any(Number), sourceUuid);
     expect(mockVectorRetriever.search).toHaveBeenCalledWith('scoped', expect.any(Number), sourceUuid);
+  });
+
+  it('12. returns clean zero-result when both retrievers return empty (e.g. gibberish queries)', async () => {
+    (mockKeywordRetriever.search as any).mockResolvedValue([]);
+    (mockVectorRetriever.search as any).mockResolvedValue([]);
+
+    const res = await searchService.search({
+      query: 'fttxtx',
+      mode: 'HYBRID',
+      page: 1,
+      limit: 10,
+    });
+
+    expect(res.results).toHaveLength(0);
+    expect(res.pagination.total).toBe(0);
+    expect(res.pagination.hasMore).toBe(false);
+  });
+
+  it('13. ensures keyword match ranks top when vector retriever returns 0 qualifying candidates', async () => {
+    (mockKeywordRetriever.search as any).mockResolvedValue([createDummyResult('exact-kw', 1, 'keyword', 0.9)]);
+    (mockVectorRetriever.search as any).mockResolvedValue([]);
+
+    const res = await searchService.search({
+      query: 'exact technical term',
+      mode: 'HYBRID',
+      page: 1,
+      limit: 10,
+    });
+
+    expect(res.results).toHaveLength(1);
+    expect(res.results[0].chunkId).toBe('exact-kw');
+    expect(res.results[0].matchedBy).toEqual({ keyword: true, vector: false });
   });
 
   function createDummyResult(

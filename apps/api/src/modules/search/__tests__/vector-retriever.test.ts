@@ -61,7 +61,7 @@ describe('VectorRetrieverService Integration & Unit Tests', () => {
     });
 
     it('orders results by cosine similarity descending (score DESC)', async () => {
-      const results = await retriever.search('operating system kernel and device drivers', 5);
+      const results = await retriever.search('operating system kernel and device drivers', 5, undefined, 0.40);
 
       expect(results.length).toBeGreaterThan(0);
 
@@ -153,6 +153,20 @@ describe('VectorRetrieverService Integration & Unit Tests', () => {
 
       const resilientRetriever = new VectorRetrieverService(prisma, emptyVectorProvider);
       const results = await resilientRetriever.search('any query', 5);
+      expect(results).toEqual([]);
+    });
+  });
+
+  describe('Relevance Threshold and Gibberish Rejection', () => {
+    it('rejects low-confidence or gibberish queries with zero qualifying results', async () => {
+      // With calibrated threshold (0.58), unrelated queries like 'fttxtx' (~0.507 score) return 0 results
+      const results = await retriever.search('fttxtx', 10);
+      expect(results).toEqual([]);
+    });
+
+    it('enforces customMinSimilarity threshold strictly', async () => {
+      // With impossible threshold 0.99, no chunk qualifies
+      const results = await retriever.search('caching and memory', 5, undefined, 0.99);
       expect(results).toEqual([]);
     });
   });

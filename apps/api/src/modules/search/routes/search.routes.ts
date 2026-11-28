@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   search,
+  searchStream,
   getSuggestions,
   getAnalytics,
   getSearchById,
@@ -16,6 +17,9 @@ const router: Router = Router();
 
 // GET /api/v1/search - Main search endpoint
 router.get('/', searchRateLimiter, search);
+
+// GET /api/v1/search/stream - Progressive search endpoint via SSE
+router.get('/stream', searchRateLimiter, searchStream);
 
 // GET /api/v1/search/suggestions - Autocomplete prefix suggestions
 router.get('/suggestions', suggestionsRateLimiter, getSuggestions);

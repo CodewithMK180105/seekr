@@ -1,87 +1,237 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Database, Globe, RefreshCw, CheckCircle2, AlertCircle, Layers } from 'lucide-react';
+import { SearchMode } from '@seekr/types';
+import { Navbar } from '@/components/layout/Navbar';
+import { AmbientBackground } from '@/components/layout/AmbientBackground';
+import { SearchBox } from '@/components/search/SearchBox';
+import { SearchResults } from '@/components/search/SearchResults';
+import { SearchAnalyticsModal } from '@/components/search/SearchAnalyticsModal';
+import { executeSearch, executeSearchProgressive, SearchResponseData } from '@/lib/api';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Database, ShieldCheck, Sparkles, Zap, ArrowUpRight } from 'lucide-react';
 
 export default function HomePage() {
-  const [query, setQuery] = useState('');
+  const [searchData, setSearchData] = useState<SearchResponseData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+
+  const [activeQuery, setActiveQuery] = useState('');
+  const [activeMode, setActiveMode] = useState<SearchMode>('HYBRID');
+  const [selectedSourceFilter, setSelectedSourceFilter] = useState<string | null>(null);
+  const [isAiResponseEnabled, setIsAiResponseEnabled] = useState(false);
+  const [progressivePhase, setProgressivePhase] = useState<{ phase: string; message: string } | null>(null);
+
+  const handleSearch = (query: string, mode: SearchMode, page = 1) => {
+    setIsLoading(true);
+    setError(null);
+    setActiveQuery(query);
+    setActiveMode(mode);
+    setProgressivePhase(null);
+    if (page === 1) {
+      setSelectedSourceFilter(null);
+    }
+
+    executeSearchProgressive(
+      { q: query, mode, page, limit: 10 },
+      {
+        onPhase: (phase, message) => {
+          setProgressivePhase({ phase, message });
+        },
+        onLocalResults: (data) => {
+          setSearchData(data);
+          setIsLoading(false);
+        },
+        onComplete: (data) => {
+          setSearchData(data);
+          setIsLoading(false);
+          setProgressivePhase(null);
+          if (page > 1 && typeof window !== 'undefined') {
+            window.scrollTo({ top: 280, behavior: 'smooth' });
+          }
+        },
+        onError: (err: any) => {
+          console.error('[HomePage] Search execution failed:', err);
+          setError(err?.message || 'Search failed. Please ensure the search service is running.');
+          setIsLoading(false);
+          setProgressivePhase(null);
+        },
+      }
+    );
+  };
+
+  const curatedTopics = [
+    {
+      title: 'Data Storage & Recovery',
+      description: 'How modern memory stores save snapshots and recover after unexpected crashes.',
+      query: 'How does Redis persistence and snapshotting work?',
+      icon: Database,
+      tag: 'Database',
+      accent: 'text-blue-500',
+    },
+    {
+      title: 'Web Security & Protection',
+      description: 'Preventing private network leaks and SSRF vulnerabilities in automated crawlers.',
+      query: 'What protects web crawlers against SSRF vulnerabilities?',
+      icon: ShieldCheck,
+      tag: 'Security',
+      accent: 'text-emerald-500',
+    },
+    {
+      title: 'Concept & Semantic Search',
+      description: 'Finding relevant knowledge by meaning and context even when words differ.',
+      query: 'How does vector similarity search find related concepts?',
+      icon: Sparkles,
+      tag: 'Discovery',
+      accent: 'text-purple-500',
+    },
+    {
+      title: 'High-Speed Caching',
+      description: 'Accelerating repeated queries and eliminating rate limits with tiered memory.',
+      query: 'How does tiered caching speed up retrieval?',
+      icon: Zap,
+      tag: 'Performance',
+      accent: 'text-amber-500',
+    },
+  ];
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-12">
-      {/* Header */}
-      <div className="text-center space-y-4 mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium tracking-wide">
-          <Layers className="w-3.5 h-3.5" /> Phase 2 Ingestion & Orchestration Active
-        </div>
-        <h1 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-300 to-white bg-clip-text text-transparent">
-          Seekr
-        </h1>
-        <p className="text-gray-400 text-base max-w-xl mx-auto">
-          AI-Powered Hybrid Search & Research Engine combining PostgreSQL Full-Text Search, pgvector, Reciprocal Rank Fusion, and RAG.
-        </p>
+    <div className="relative min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+      {/* Dynamic Glassmorphism Ambient Glow Backdrop */}
+      <AmbientBackground />
 
-        {/* Search Input Preview */}
-        <div className="max-w-2xl mx-auto mt-8 relative">
-          <div className="relative flex items-center">
-            <Search className="w-5 h-5 absolute left-4 text-gray-400" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search across indexed documents (e.g. 'How does Redis recover data?')..."
-              className="w-full pl-12 pr-28 py-3.5 rounded-xl bg-gray-900/80 border border-gray-800 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-lg"
-            />
-            <button className="absolute right-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-all shadow">
-              Search
+      {/* Main Top Navigation */}
+      <Navbar onOpenAnalytics={() => setIsAnalyticsOpen(true)} />
+
+      {/* Hero & Search Content */}
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 sm:py-12 flex flex-col items-center">
+        {/* Hero Branding Header */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-panel text-xs font-semibold text-blue-600 dark:text-blue-400 border border-blue-500/20 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+            <span>Intelligent Knowledge Search</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Find answers in your{' '}
+            <span className="glass-text-shimmer">library</span>
+          </h1>
+
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl mx-auto leading-relaxed">
+            Ask questions naturally or search exact terms to discover verified guides, technical
+            articles, and documentation instantly.
+          </p>
+        </div>
+
+        {/* Omnibox Search Component with Gemini Typewriter */}
+        <SearchBox
+          onSearch={(q, m) => handleSearch(q, m, 1)}
+          isLoading={isLoading}
+          initialQuery={activeQuery}
+          initialMode={activeMode}
+        />
+
+        {/* Error Alert Display */}
+        {error && (
+          <div className="w-full max-w-3xl mt-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-sm flex items-center justify-between">
+            <span>{error}</span>
+            <button
+              type="button"
+              onClick={() => setError(null)}
+              className="text-xs underline font-semibold hover:opacity-80"
+            >
+              Dismiss
             </button>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Grid Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Card 1: Content Ingestion */}
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 backdrop-blur space-y-3">
-          <div className="flex items-center gap-3 text-blue-400">
-            <Globe className="w-5 h-5" />
-            <h2 className="font-semibold text-gray-100">Web Crawler</h2>
-          </div>
-          <p className="text-sm text-gray-400">
-            Asynchronous BullMQ crawler respecting robots.txt and guarding against SSRF. Extracts clean text and handles link discovery.
-          </p>
-          <div className="pt-2 flex items-center gap-2 text-xs text-emerald-400">
-            <CheckCircle2 className="w-4 h-4" /> SSRF & Robots Guards Active
-          </div>
-        </div>
+        {/* Search Results Display with Top & Bottom Pagination and Sidebar Filters */}
+        <SearchResults
+          data={searchData}
+          isLoading={isLoading}
+          onPageChange={(page) => handleSearch(activeQuery, activeMode, page)}
+          selectedSourceFilter={selectedSourceFilter}
+          onSelectSourceFilter={setSelectedSourceFilter}
+          isAiResponseEnabled={isAiResponseEnabled}
+          onToggleAiResponse={setIsAiResponseEnabled}
+          progressivePhase={progressivePhase}
+        />
 
-        {/* Card 2: Document Persistence */}
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 backdrop-blur space-y-3">
-          <div className="flex items-center gap-3 text-indigo-400">
-            <Database className="w-5 h-5" />
-            <h2 className="font-semibold text-gray-100">Document Persistence</h2>
-          </div>
-          <p className="text-sm text-gray-400">
-            Raw documents and metadata are persisted in PostgreSQL before chunking. SHA-256 hashes detect content updates and trigger re-indexing.
-          </p>
-          <div className="pt-2 flex items-center gap-2 text-xs text-emerald-400">
-            <CheckCircle2 className="w-4 h-4" /> Version Hashing Active
-          </div>
-        </div>
+        {/* Curated Exploration Cards when no active search (Proper Space Utilization) */}
+        {!searchData && !isLoading && (
+          <section className="w-full max-w-5xl mt-16 pt-8 border-t border-slate-200/60 dark:border-white/5 space-y-6 animate-in fade-in duration-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  Explore Topics in Library
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Click any topic to search its verified documentation and articles
+                </p>
+              </div>
+            </div>
 
-        {/* Card 3: Decoupled Queue Pipeline */}
-        <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-6 backdrop-blur space-y-3">
-          <div className="flex items-center gap-3 text-purple-400">
-            <RefreshCw className="w-5 h-5" />
-            <h2 className="font-semibold text-gray-100">Indexing Pipeline</h2>
-          </div>
-          <p className="text-sm text-gray-400">
-            Independent BullMQ indexing queue decouples web crawling from vector embedding generation, enabling independent retries and throttling.
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {curatedTopics.map((topic, index) => {
+                const Icon = topic.icon;
+                return (
+                  <Card
+                    key={index}
+                    onClick={() => handleSearch(topic.query, 'HYBRID', 1)}
+                    className="p-5 glass-panel-interactive cursor-pointer group flex flex-col justify-between space-y-3 transition-all hover:scale-[1.02]"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className={`p-2 rounded-xl bg-slate-100 dark:bg-white/5 ${topic.accent}`}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <Badge variant="secondary" className="text-[10px] font-normal">
+                          {topic.tag}
+                        </Badge>
+                      </div>
+                      <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {topic.title}
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                        {topic.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 flex items-center gap-1 text-[11px] font-semibold text-blue-600 dark:text-blue-400">
+                      <span>Search topic</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full border-t border-slate-200/80 dark:border-white/5 py-6 px-4 mt-12 text-center text-xs text-slate-500 dark:text-slate-400 backdrop-blur-md">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p>
+            © {new Date().getFullYear()} Seekr — Knowledge & Research Engine.
           </p>
-          <div className="pt-2 flex items-center gap-2 text-xs text-blue-400">
-            <AlertCircle className="w-4 h-4" /> Ready for Phase 3 Chunking
+          <div className="flex items-center gap-4 text-[11px]">
+            <span>Fast search</span>
+            <span>•</span>
+            <span>Verified sources</span>
+            <span>•</span>
+            <span>Telemetry ready</span>
           </div>
         </div>
-      </div>
-    </main>
+      </footer>
+
+      {/* Engine Analytics Modal */}
+      <SearchAnalyticsModal
+        isOpen={isAnalyticsOpen}
+        onClose={() => setIsAnalyticsOpen(false)}
+      />
+    </div>
   );
 }

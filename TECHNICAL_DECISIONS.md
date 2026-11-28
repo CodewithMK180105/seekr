@@ -349,3 +349,33 @@ This document records the architectural and technical decisions made during the 
   - Full observability across the entire ingest, search, research, cache, and rate limiting pipelines.
   - Ready for immediate integration with Prometheus scrapers, Grafana dashboards, and Kubernetes alerting.
   - Zero performance degradation on search or streaming endpoints with strictly bounded memory footprint.
+
+---
+
+## ADR 022: Glassmorphic Search UI Architecture and Modern Color-Scheme Theming
+
+### Status
+Accepted (Milestone 7.1)
+
+### Context
+Seekr requires a premium-grade, accessible web frontend supporting high-velocity search, live autocomplete, retrieval mode switching, and real-time engine telemetry. The UI must support both Light and Dark themes with modern glassmorphism aesthetics without suffering from Flash of Unstyled Content (FOUC), color-scheme mismatches, or high input latency.
+
+### Decision
+1. **Glassmorphism Foundations**:
+   - Engineered dual-layered glassmorphic surfaces (`glass-panel`, `glass-panel-interactive`, `glass-input`) using `backdrop-filter: blur(16px)` and translucent surfaces (`rgba(255, 255, 255, 0.7)` in light mode; `rgba(15, 23, 42, 0.65)` in dark mode).
+   - Positioned dynamic ambient glowing spheres with soft blur filters (`blur-[130px]`) behind the viewport canvas to produce depth and illumination through the glass panels.
+2. **Modern Web Guidance for Theme & Color Scheme**:
+   - Declared `<meta name="color-scheme" content="light dark">` in `<head>` and mapped `:root:has(> head > meta[name="color-scheme"][content="dark"])` to enforce native browser UI theme adaptation (scrollbars, inputs).
+   - Injected an inline zero-FOUC script in `<head>` executing before initial paint to read persisted preferences from `localStorage` (`seekr-theme`) or match OS `prefers-color-scheme`.
+   - Built a 3-state `ThemeProvider` (`light`, `dark`, `system`) with cross-tab storage synchronization and `prefers-color-scheme` media query listeners.
+3. **Omnibox & Live Autocomplete**:
+   - Implemented 150ms debounced prefix autocomplete querying `GET /api/v1/search/suggestions`.
+   - Provided full keyboard accessibility (`ArrowUp`, `ArrowDown`, `Enter`, `Escape`) and omnibox focus shortcut (`Cmd+K` / `Ctrl+K`).
+4. **Telemetry & Click Tracking**:
+   - Integrated asynchronous non-blocking feedback tracking (`POST /api/v1/search/feedback`) on result clicks to calculate Search CTR and Result CTR without stalling navigation.
+   - Built a real-time `SearchAnalyticsModal` querying `GET /api/v1/search/analytics` to surface P50/P95 latencies, query counts, and mode distributions.
+
+### Consequences
+- Fast initial load with zero flash of unthemed background on both light and dark modes.
+- High visual appeal with translucent glassmorphic components, glowing interactive hover states, and live telemetry.
+- Clean separation between Next.js client-side UI and the Express backend API.

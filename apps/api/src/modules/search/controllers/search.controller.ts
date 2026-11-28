@@ -61,6 +61,54 @@ export async function search(
   }
 }
 
+export async function searchStream(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const input = searchQuerySchema.parse(req.query);
+    const userId = (req as any).user?.id;
+    const sessionId = (req.headers['x-session-id'] as string) || undefined;
+
+    // Set Server-Sent Events headers
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders?.();
+
+    const sendEvent = (event: string, payload: any) => {
+      res.write(`event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`);
+    };
+
+    await searchService.search(
+      {
+        query: input.q,
+        mode: input.mode as SearchMode,
+        page: input.page,
+        limit: input.limit,
+        sourceId: input.sourceId,
+        userId,
+        sessionId,
+        skipCache: input.skipCache || req.headers['cache-control'] === 'no-cache',
+      },
+      (evt) => {
+        sendEvent('search_event', evt);
+      }
+    );
+
+    res.write('event: end\ndata: {}\n\n');
+    res.end();
+  } catch (err) {
+    if (!res.headersSent) {
+      next(err);
+    } else {
+      res.write(`event: error\ndata: ${JSON.stringify({ error: (err as any)?.message || 'Stream error' })}\n\n`);
+      res.end();
+    }
+  }
+}
+
 export async function getSuggestions(
   req: Request,
   res: Response,
@@ -116,13 +164,20 @@ export async function getSearchById(
 ): Promise<void> {
   try {
     const { id } = req.params;
+    const item = await searchService.getSearchById(id);
 
-    const response: ApiResponse<{ id: string }> = {
+    if (!item) {
+      res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: `Search query with ID ${id} not found` },
+      });
+      return;
+    }
+
+    res.status(200).json({
       success: true,
-      data: { id },
-    };
-
-    res.status(200).json(response);
+      data: item,
+    });
   } catch (err) {
     next(err);
   }
@@ -134,26 +189,13 @@ export async function recordFeedback(
   next: NextFunction
 ): Promise<void> {
   try {
-    const input = searchFeedbackSchema.parse(req.body);
-    const result = await feedbackService.recordClick({
-      searchQueryId: input.searchQueryId,
-      searchId: input.searchId,
-      chunkId: input.chunkId,
-      action: input.action,
-      event: input.event,
-    });
+    const payload = searchFeedbackSchema.parse(req.body);
+    await feedbackService.recordClick(payload);
 
-    const response: ApiResponse<{
-      recorded: boolean;
-      searchId: string;
-      searchQueryId: string;
-      chunkId: string;
-    }> = {
+    res.status(200).json({
       success: true,
-      data: result,
-    };
-
-    res.status(200).json(response);
+      message: 'Feedback recorded successfully',
+    });
   } catch (err) {
     next(err);
   }
